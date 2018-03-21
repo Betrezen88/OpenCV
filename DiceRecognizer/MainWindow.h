@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class CVImageWidget;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +12,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private slots:
+    void openImage();
+
+private:
+    void createMenus();
+
+private:
+    CVImageWidget* m_cvWidget;
 };
 
 #endif // MAINWINDOW_H
