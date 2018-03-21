@@ -16,7 +16,9 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lope
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    CVImageWidget.cpp
+    CVImageWidget.cpp \
+    ContrastEnhancement.cpp
 
 HEADERS  += MainWindow.h \
-    CVImageWidget.h
+    CVImageWidget.h \
+    ContrastEnhancement.h
