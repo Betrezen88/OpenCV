@@ -2,9 +2,9 @@
 #define CVIMAGEWIDGET_H
 
 #include <QWidget>
-#include <opencv2/opencv.hpp>
+#include <QImage>
 
-class QImage;
+#include <opencv2/opencv.hpp>
 
 class CVImageWidget : public QWidget
 {
@@ -22,6 +22,7 @@ protected:
 
 private:
     QImage m_image;
+    cv::Mat m_cvImage;
 };
 
 #endif // CVIMAGEWIDGET_H

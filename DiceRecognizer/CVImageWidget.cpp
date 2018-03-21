@@ -9,20 +9,19 @@ CVImageWidget::CVImageWidget(QWidget *parent) : QWidget(parent)
 
 void CVImageWidget::showImage(const cv::Mat &image)
 {
-    cv::Mat tmpCV;
     switch(image.type())
     {
         case CV_8UC1:
-            cvtColor(image, tmpCV, CV_GRAY2RGB);
+            cvtColor(image, m_cvImage, CV_GRAY2RGB);
             break;
         case CV_8UC3:
-            cvtColor(image, tmpCV, CV_BGR2RGB);
+            cvtColor(image, m_cvImage, CV_BGR2RGB);
             break;
     }
 
-    if (tmpCV.isContinuous())
+    if (m_cvImage.isContinuous())
     {
-        m_image = QImage(tmpCV.data, tmpCV.cols, tmpCV.rows, tmpCV.cols*3, QImage::Format_RGB888);
+        m_image = QImage(m_cvImage.data, m_cvImage.cols, m_cvImage.rows, m_cvImage.cols*3, QImage::Format_RGB888);
         this->setFixedSize(image.cols, image.rows);
         repaint();
     }
