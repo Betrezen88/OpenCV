@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-class CVImageWidget;
+class QTabWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -20,7 +20,7 @@ private:
     void createMenus();
 
 private:
-    CVImageWidget* m_cvWidget;
+    QTabWidget* m_tabWidget;
 };
 
 #endif // MAINWINDOW_H

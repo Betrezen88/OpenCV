@@ -8,14 +8,12 @@
 #include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
+#include <QTabWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     createMenus();
-
-    m_cvWidget = new CVImageWidget(this);
-    setCentralWidget(m_cvWidget);
 }
 
 MainWindow::~MainWindow()
@@ -28,8 +26,21 @@ void MainWindow::openImage()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), "");
 
     cv::Mat cvImage = cv::imread(fileName.toStdString());
+    cv::Mat cvGray;
 
-    m_cvWidget->showImage(cvImage);
+    cv::cvtColor(cvImage, cvGray, CV_BGR2GRAY);
+
+    CVImageWidget* inputImage = new CVImageWidget(this);
+    inputImage->showImage(cvImage);
+
+    CVImageWidget* grayImage = new CVImageWidget(this);
+    grayImage->showImage(cvGray);
+
+    m_tabWidget = new QTabWidget(this);
+    m_tabWidget->addTab(inputImage, tr("Input Image"));
+    m_tabWidget->addTab(grayImage, tr("Gray Image"));
+
+    setCentralWidget(m_tabWidget);
 }
 
 void MainWindow::createMenus()
