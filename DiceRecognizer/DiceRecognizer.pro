@@ -18,9 +18,11 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     CVImageWidget.cpp \
     ContrastEnhancement.cpp \
-    PropertiesDialog.cpp
+    PropertiesDialog.cpp \
+    ImageProcessor.cpp
 
 HEADERS  += MainWindow.h \
     CVImageWidget.h \
     ContrastEnhancement.h \
-    PropertiesDialog.h
+    PropertiesDialog.h \
+    ImageProcessor.h

@@ -14,6 +14,21 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    m_propsDialog = new PropertiesDialog(this);
+    m_imgProc = new ImageProcessor(*m_propsDialog);
+
+    m_inputImage = new CVImageWidget(this);
+    m_grayImage = new CVImageWidget(this);
+    m_thresholdedImage = new CVImageWidget(this);
+    m_filteredImage = new CVImageWidget(this);
+
+    connect(m_imgProc, &ImageProcessor::finished, this, &MainWindow::refreashImages);
+
+    m_propsDialog->setContrast(60);
+    m_propsDialog->setThreshold(172);
+    m_propsDialog->setDilation(2);
+    m_propsDialog->setErosion(1);
+
     createMenus();
 }
 
@@ -28,44 +43,28 @@ void MainWindow::openImage()
 
     cv::Mat cvImage = cv::imread(fileName.toStdString());
 
-    // Poniższy proces przenieść do osobnej klasy rozdzielonej na konkretne kroki
-    cv::Mat cvGray;
-    cv::Mat cvEnhanced;
-    cv::Mat cvThresholded;
-    cv::Mat cvFiltrated;
-
-    cv::cvtColor(cvImage, cvGray, CV_BGR2GRAY); // Convert input image to gray
-
-    CVImageWidget* inputImage = new CVImageWidget(this);
-    inputImage->showImage(cvImage);
-
-    CVImageWidget* grayImage = new CVImageWidget(this);
-    grayImage->showImage(cvGray);
-
-    cvEnhanced = ContrastEnhancement(cvGray, 60.0/50.0).image(); // Enhance gray image
-
-    CVImageWidget* enhancedImage = new CVImageWidget(this);
-    enhancedImage->showImage(cvEnhanced);
-
-    cv::threshold(cvGray, cvThresholded, 172, 255, CV_THRESH_BINARY);
-
-    CVImageWidget* thresholdedImage = new CVImageWidget(this);
-    thresholdedImage->showImage(cvThresholded);
-
-    cv::dilate(cvThresholded, cvFiltrated, cv::Mat(), cv::Point(-1, -1), 2);
-    cv::erode(cvFiltrated, cvFiltrated, cv::Mat(), cv::Point(-1, -1), 1);
-
-    CVImageWidget* filtratedImage = new CVImageWidget(this);
-    filtratedImage->showImage(cvFiltrated);
+    m_imgProc->process(cvImage);
 
     m_tabWidget = new QTabWidget(this);
-    m_tabWidget->addTab(inputImage, tr("Input Image"));
-    m_tabWidget->addTab(grayImage, tr("Gray Image"));
-    m_tabWidget->addTab(enhancedImage, tr("Enhanced Image"));
-    m_tabWidget->addTab(thresholdedImage, tr("Enhanced Image"));
-    m_tabWidget->addTab(filtratedImage, tr("Filtrated Image"));
+    m_tabWidget->addTab(m_inputImage, tr("Input Image"));
+    m_tabWidget->addTab(m_grayImage, tr("Gray Image"));
+    m_tabWidget->addTab(m_thresholdedImage, tr("Thresholed Image"));
+    m_tabWidget->addTab(m_filteredImage, tr("Filtrated Image"));
 
     setCentralWidget(m_tabWidget);
+}
+
+void MainWindow::openPropsDialog()
+{
+    m_propsDialog->show();
+}
+
+void MainWindow::refreashImages()
+{
+    m_inputImage->showImage(m_imgProc->inputImage());
+    m_grayImage->showImage(m_imgProc->grayImage());
+    m_thresholdedImage->showImage(m_imgProc->thresholdedImage());
+    m_filteredImage->showImage(m_imgProc->filteredImage());
 }
 
 void MainWindow::createMenus()
@@ -73,6 +72,10 @@ void MainWindow::createMenus()
     QAction* openImageAct = new QAction(tr("Open image"), this);
     connect(openImageAct, &QAction::triggered, this, &MainWindow::openImage);
 
+    QAction* openProps = new QAction(tr("Properties"));
+    connect(openProps, &QAction::triggered, this, &MainWindow::openPropsDialog);
+
     QMenu* file = menuBar()->addMenu(tr("File"));
     file->addAction(openImageAct);
+    file->addAction(openProps);
 }

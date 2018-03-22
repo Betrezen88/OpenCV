@@ -6,7 +6,8 @@
 #include <QSlider>
 #include <QtGlobal>
 
-PropertiesDialog::PropertiesDialog()
+PropertiesDialog::PropertiesDialog(QWidget *parent)
+    : QDialog(parent)
 {
     m_contrast = new QSpinBox(this);
     m_threshold = new QSpinBox(this);
@@ -23,6 +24,8 @@ PropertiesDialog::PropertiesDialog()
     QSlider* dilation = new QSlider(Qt::Horizontal ,this);
     QSlider* erosion = new QSlider(Qt::Horizontal ,this);
 
+    threshol->setRange(0, 255);
+
     connect(contrast, &QSlider::valueChanged, m_contrast, &QSpinBox::setValue);
     connect(m_contrast, QOverload<int>::of(&QSpinBox::valueChanged), contrast, &QSlider::setValue);
 
@@ -34,6 +37,11 @@ PropertiesDialog::PropertiesDialog()
 
     connect(erosion, &QSlider::valueChanged, m_erosion, &QSpinBox::setValue);
     connect(m_erosion, QOverload<int>::of(&QSpinBox::valueChanged), erosion, &QSlider::setValue);
+
+    connect(m_contrast, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
+    connect(m_threshold, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
+    connect(m_dilation, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
+    connect(m_erosion, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
 
     QGridLayout* all = new QGridLayout;
     all->addWidget(new QLabel(tr("Contrast:")), 0, 0);
@@ -55,4 +63,33 @@ PropertiesDialog::PropertiesDialog()
 PropertiesDialog::~PropertiesDialog()
 {
 
+}
+
+void PropertiesDialog::setContrast(const int c)
+{
+    m_contrast->setValue(c);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::setThreshold(const int t)
+{
+    m_threshold->setValue(t);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::setDilation(const int d)
+{
+    m_dilation->setValue(d);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::setErosion(const int e)
+{
+    m_erosion->setValue(e);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::valueChanged()
+{
+    emit propertyChanged();
 }

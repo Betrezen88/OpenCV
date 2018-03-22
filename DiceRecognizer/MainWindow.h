@@ -3,7 +3,11 @@
 
 #include <QMainWindow>
 
+#include "PropertiesDialog.h"
+#include "ImageProcessor.h"
+
 class QTabWidget;
+class CVImageWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -15,12 +19,21 @@ public:
 
 private slots:
     void openImage();
+    void openPropsDialog();
+    void refreashImages();
 
 private:
     void createMenus();
 
 private:
     QTabWidget* m_tabWidget;
+    PropertiesDialog* m_propsDialog;
+    ImageProcessor* m_imgProc;
+
+    CVImageWidget* m_inputImage;
+    CVImageWidget* m_grayImage;
+    CVImageWidget* m_thresholdedImage;
+    CVImageWidget* m_filteredImage;
 };
 
 #endif // MAINWINDOW_H
