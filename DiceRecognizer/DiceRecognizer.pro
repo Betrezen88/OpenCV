@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,8 +17,10 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lope
 SOURCES += main.cpp\
         MainWindow.cpp \
     CVImageWidget.cpp \
-    ContrastEnhancement.cpp
+    ContrastEnhancement.cpp \
+    PropertiesDialog.cpp
 
 HEADERS  += MainWindow.h \
     CVImageWidget.h \
-    ContrastEnhancement.h
+    ContrastEnhancement.h \
+    PropertiesDialog.h
