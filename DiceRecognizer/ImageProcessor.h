@@ -18,6 +18,7 @@ public:
     cv::Mat grayImage() { return m_grayImage; }
     cv::Mat thresholdedImage() { return m_thresholdedImage; }
     cv::Mat filteredImage() { return m_filtratedImage; }
+    cv::Mat outputImage() { return m_outputImage; }
 
     void process(const cv::Mat image);
 
@@ -39,6 +40,7 @@ private:
     cv::Mat m_grayImage;
     cv::Mat m_thresholdedImage;
     cv::Mat m_filtratedImage;
+    cv::Mat m_outputImage;
     PropertiesDialog& m_propsDial;
 };
 

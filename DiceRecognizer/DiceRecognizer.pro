@@ -19,10 +19,14 @@ SOURCES += main.cpp\
     CVImageWidget.cpp \
     ContrastEnhancement.cpp \
     PropertiesDialog.cpp \
-    ImageProcessor.cpp
+    ImageProcessor.cpp \
+    Recognizer.cpp \
+    Dice.cpp
 
 HEADERS  += MainWindow.h \
     CVImageWidget.h \
     ContrastEnhancement.h \
     PropertiesDialog.h \
-    ImageProcessor.h
+    ImageProcessor.h \
+    Recognizer.h \
+    Dice.h

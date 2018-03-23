@@ -34,6 +34,7 @@ private:
     CVImageWidget* m_grayImage;
     CVImageWidget* m_thresholdedImage;
     CVImageWidget* m_filteredImage;
+    CVImageWidget* m_outputImage;
 };
 
 #endif // MAINWINDOW_H

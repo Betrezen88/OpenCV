@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_grayImage = new CVImageWidget(this);
     m_thresholdedImage = new CVImageWidget(this);
     m_filteredImage = new CVImageWidget(this);
+    m_outputImage = new CVImageWidget(this);
 
     connect(m_imgProc, &ImageProcessor::finished, this, &MainWindow::refreashImages);
 
@@ -50,6 +51,7 @@ void MainWindow::openImage()
     m_tabWidget->addTab(m_grayImage, tr("Gray Image"));
     m_tabWidget->addTab(m_thresholdedImage, tr("Thresholed Image"));
     m_tabWidget->addTab(m_filteredImage, tr("Filtrated Image"));
+    m_tabWidget->addTab(m_outputImage, tr("Output Image"));
 
     setCentralWidget(m_tabWidget);
 }
@@ -65,6 +67,7 @@ void MainWindow::refreashImages()
     m_grayImage->showImage(m_imgProc->grayImage());
     m_thresholdedImage->showImage(m_imgProc->thresholdedImage());
     m_filteredImage->showImage(m_imgProc->filteredImage());
+    m_outputImage->showImage(m_imgProc->outputImage());
 }
 
 void MainWindow::createMenus()

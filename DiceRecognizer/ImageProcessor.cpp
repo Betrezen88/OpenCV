@@ -1,5 +1,6 @@
 #include "ImageProcessor.h"
 #include "ContrastEnhancement.h"
+#include "Recognizer.h"
 
 #include <QMessageBox>
 
@@ -53,6 +54,10 @@ void ImageProcessor::segmentation(cv::Mat& image)
     threshold(image);
     // 2) Filtrate image
     filter(m_thresholdedImage);
+    Recognizer recog;
+    recog.recognize(m_filtratedImage);
+    m_inputImage.copyTo(m_outputImage);
+    recog.drawFoundDices(m_outputImage);
 }
 
 void ImageProcessor::threshold(cv::Mat &image)
