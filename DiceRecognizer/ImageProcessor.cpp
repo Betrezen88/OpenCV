@@ -26,6 +26,15 @@ void ImageProcessor::process(const cv::Mat image)
     emit finished();
 }
 
+void ImageProcessor::process(cv::VideoCapture video)
+{
+    while(true) {
+        cv::Mat image;
+        video.read(image);
+        process(image);
+    }
+}
+
 void ImageProcessor::reprocess()
 {
     if (!m_inputImage.empty())

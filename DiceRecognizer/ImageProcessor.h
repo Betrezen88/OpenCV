@@ -2,6 +2,7 @@
 #define IMAGEPROCESSOR_H
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 
 #include "PropertiesDialog.h"
 
@@ -21,6 +22,7 @@ public:
     cv::Mat outputImage() { return m_outputImage; }
 
     void process(const cv::Mat image);
+    void process(cv::VideoCapture video);
 
 signals:
     void finished();

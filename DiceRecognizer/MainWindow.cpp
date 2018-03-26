@@ -4,6 +4,7 @@
 #include "ContrastEnhancement.h"
 
 #include <opencv2/opencv.hpp>
+#include <opencv/highgui.h>
 
 #include <QAction>
 #include <QFileDialog>
@@ -44,9 +45,12 @@ void MainWindow::openImage()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Image"), "");
 
-    cv::Mat cvImage = cv::imread(fileName.toStdString());
+    //cv::Mat cvImage;// = cv::imread(fileName.toStdString());
 
-    m_imgProc->process(cvImage);
+    cv::VideoCapture cvVideo;
+    cvVideo.open(fileName.toStdString());
+
+    m_imgProc->process(cvVideo);
 
     m_tabWidget = new QTabWidget(this);
     m_tabWidget->addTab(m_inputImage, tr("Input Image"));
