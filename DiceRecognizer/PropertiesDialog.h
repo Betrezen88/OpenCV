@@ -16,11 +16,15 @@ public:
     int threshold() const { return m_threshold->value(); }
     int dilation() const { return m_dilation->value(); }
     int erosion() const { return m_erosion->value(); }
+    int diceSize() const { return m_diceSize->value(); }
+    int dotSize() const { return m_dotSize->value(); }
 
     void setContrast(const int c);
     void setThreshold(const int t);
     void setDilation(const int d);
     void setErosion(const int e);
+    void setDiceSize(const int d);
+    void setDotSize(const int d);
 
 signals:
     void propertyChanged();
@@ -33,6 +37,8 @@ private:
     QSpinBox* m_threshold;
     QSpinBox* m_dilation;
     QSpinBox* m_erosion;
+    QSpinBox* m_diceSize;
+    QSpinBox* m_dotSize;
 };
 
 #endif // PROPERTIESDIALOG_H

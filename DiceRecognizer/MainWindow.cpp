@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_propsDialog->setThreshold(172);
     m_propsDialog->setDilation(2);
     m_propsDialog->setErosion(1);
+    m_propsDialog->setDiceSize(25);
+    m_propsDialog->setDotSize(3);
 
     createMenus();
 }

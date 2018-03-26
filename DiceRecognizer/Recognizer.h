@@ -6,11 +6,12 @@
 #include <QVector>
 
 #include "Dice.h"
+#include "PropertiesDialog.h"
 
 class Recognizer
 {
 public:
-    Recognizer();
+    Recognizer(PropertiesDialog& propDial);
 
     void recognize(const cv::Mat image);
     void drawFoundDices(cv::Mat& image);
@@ -21,6 +22,7 @@ private:
 
 private:
     QVector<Dice> m_dices;
+    PropertiesDialog& m_propsDial;
 };
 
 #endif // RECOGNIZER_H

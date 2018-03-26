@@ -54,7 +54,7 @@ void ImageProcessor::segmentation(cv::Mat& image)
     threshold(image);
     // 2) Filtrate image
     filter(m_thresholdedImage);
-    Recognizer recog;
+    Recognizer recog(m_propsDial);
     recog.recognize(m_filtratedImage);
     m_inputImage.copyTo(m_outputImage);
     recog.drawFoundDices(m_outputImage);

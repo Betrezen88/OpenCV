@@ -13,16 +13,22 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
     m_threshold = new QSpinBox(this);
     m_dilation = new QSpinBox(this);
     m_erosion = new QSpinBox(this);
+    m_diceSize = new QSpinBox(this);
+    m_dotSize = new QSpinBox(this);
 
     m_contrast->setRange(0, 100);
     m_threshold->setRange(0, 255);
     m_dilation->setRange(0, 50);
     m_erosion->setRange(0, 50);
+    m_diceSize->setRange(0, 100);
+    m_dotSize->setRange(0, 100);
 
     QSlider* contrast = new QSlider(Qt::Horizontal ,this);
     QSlider* threshol = new QSlider(Qt::Horizontal ,this);
     QSlider* dilation = new QSlider(Qt::Horizontal ,this);
     QSlider* erosion = new QSlider(Qt::Horizontal ,this);
+    QSlider* diceSize = new QSlider(Qt::Horizontal ,this);
+    QSlider* dotSize = new QSlider(Qt::Horizontal ,this);
 
     threshol->setRange(0, 255);
 
@@ -38,10 +44,18 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
     connect(erosion, &QSlider::valueChanged, m_erosion, &QSpinBox::setValue);
     connect(m_erosion, QOverload<int>::of(&QSpinBox::valueChanged), erosion, &QSlider::setValue);
 
+    connect(diceSize, &QSlider::valueChanged, m_diceSize, &QSpinBox::setValue);
+    connect(m_diceSize, QOverload<int>::of(&QSpinBox::valueChanged), diceSize, &QSlider::setValue);
+
+    connect(dotSize, &QSlider::valueChanged, m_dotSize, &QSpinBox::setValue);
+    connect(m_dotSize, QOverload<int>::of(&QSpinBox::valueChanged), dotSize, &QSlider::setValue);
+
     connect(m_contrast, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
     connect(m_threshold, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
     connect(m_dilation, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
     connect(m_erosion, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
+    connect(m_diceSize, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
+    connect(m_dotSize, QOverload<int>::of(&QSpinBox::valueChanged), this, &PropertiesDialog::valueChanged);
 
     QGridLayout* all = new QGridLayout;
     all->addWidget(new QLabel(tr("Contrast:")), 0, 0);
@@ -56,6 +70,12 @@ PropertiesDialog::PropertiesDialog(QWidget *parent)
     all->addWidget(new QLabel(tr("Erosion:")), 3, 0);
     all->addWidget(m_erosion, 3, 1);
     all->addWidget(erosion, 3, 2);
+    all->addWidget(new QLabel(tr("Dice size:")), 4, 0);
+    all->addWidget(m_diceSize, 4, 1);
+    all->addWidget(diceSize, 4, 2);
+    all->addWidget(new QLabel(tr("Dot size:")), 5, 0);
+    all->addWidget(m_dotSize, 5, 1);
+    all->addWidget(dotSize, 5, 2);
 
     setLayout(all);
 }
@@ -86,6 +106,18 @@ void PropertiesDialog::setDilation(const int d)
 void PropertiesDialog::setErosion(const int e)
 {
     m_erosion->setValue(e);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::setDiceSize(const int d)
+{
+    m_diceSize->setValue(d);
+    emit propertyChanged();
+}
+
+void PropertiesDialog::setDotSize(const int d)
+{
+    m_dotSize->setValue(d);
     emit propertyChanged();
 }
 

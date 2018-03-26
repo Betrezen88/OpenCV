@@ -1,8 +1,7 @@
 #include "Recognizer.h"
 
-static const int minDiceSize = 25;
-
-Recognizer::Recognizer()
+Recognizer::Recognizer(PropertiesDialog &propDial)
+    : m_propsDial(propDial)
 {
 
 }
@@ -10,16 +9,12 @@ Recognizer::Recognizer()
 void Recognizer::recognize(const cv::Mat image)
 {
     cv::Rect rect;
-    for(int y = minDiceSize / 2; y < image.rows; ++y)
-        for(int x = minDiceSize / 2; x < image.cols; ++x)
+    for(int y = m_propsDial.diceSize(); y < image.rows; ++y)
+        for(int x = m_propsDial.diceSize(); x < image.cols; ++x)
             if (image.at<uchar>(y, x) == 255)
-            {
                 recognizeDices(x, y, rect, image);
-            }
             else if (image.at<uchar>(y, x) == 0)
-            {
                 recognizeDots(x, y, rect, image);
-            }
 }
 
 void Recognizer::drawFoundDices(cv::Mat &image)
@@ -57,7 +52,7 @@ void Recognizer::recognizeDices(int x, int y, cv::Rect& rect, const cv::Mat &ima
                   cv::Scalar::all(0.0),
                   cv::Scalar::all(0.0),
                   CV_FLOODFILL_FIXED_RANGE);
-    if (rect.width > minDiceSize && rect.height > minDiceSize )
+    if (rect.width > m_propsDial.diceSize() && rect.height > m_propsDial.diceSize() )
     {
         Dice dice(rect);
         m_dices.append( dice );
@@ -81,8 +76,8 @@ void Recognizer::recognizeDots(int x, int y, cv::Rect &rect, const cv::Mat &imag
                   cv::Scalar::all(0.0),
                   cv::Scalar::all(0.0),
                   CV_FLOODFILL_FIXED_RANGE);
-    if (rect.width < minDiceSize / 2 && rect.height < minDiceSize / 2
-            && rect.width > minDiceSize / 8 && rect.height > minDiceSize / 2)
+    if (rect.width < m_propsDial.diceSize() && rect.height < m_propsDial.diceSize()
+        && rect.width > m_propsDial.dotSize() && rect.height > m_propsDial.dotSize())
     {
         cv::Point dot(rect.x + rect.width / 2, rect.y + rect.height / 2);
         for (Dice& dice : m_dices)
