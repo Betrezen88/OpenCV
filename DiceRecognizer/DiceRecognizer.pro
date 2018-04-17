@@ -12,9 +12,23 @@ TARGET = DiceRecognizer
 TEMPLATE = app
 
 INCLUDEPATH += /usr/local/include/opencv
-LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc
+LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc -lopencv_videoio
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    ImageProcessor.cpp \
+    ImageWigdet.cpp \
+    Dice.cpp \
+    Recognizer.cpp \
+    Properties.cpp \
+    Player.cpp \
+    PlayerControls.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    ImageProcessor.h \
+    ImageWigdet.h \
+    Dice.h \
+    Recognizer.h \
+    Properties.h \
+    Player.h \
+    PlayerControls.h
