@@ -23,7 +23,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void openImage();
+    bool openFile();
     void showProperties();
     void displayError(const QString message);
     void updateImages(const QVector<cv::Mat> images);
@@ -32,11 +32,10 @@ private slots:
 private:
     void createMenu();
     void createActions();
-    bool openFile();
 
 private:
     QMenu* m_fileMenu;
-    QAction* m_openImageAct;
+    QAction* m_openFileAct;
     QAction* m_showPropertiesAct;
 
     QTabWidget* m_tabWidget;

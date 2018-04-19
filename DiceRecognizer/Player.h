@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QObject>
 #include <QVector>
+#include <QScopedPointer>
 
 #include "Properties.h"
 #include "ImageProcessor.h"
@@ -27,6 +28,7 @@ public:
 signals:
     void totalFrameCount(int frames);
     void currentFrameNumber(int f);
+    void singleImage(bool y);
     void resultReady(QVector<cv::Mat> result);
 
 public slots:
@@ -34,9 +36,15 @@ public slots:
     void pause();
     void stop();
     void setLoop(bool l);
+    void nextFrame();
+    void previousFrame();
 
 protected:
     void run();
+
+private:
+    bool readNonEmptyFrame(cv::Mat& frame);
+    void processFrame(const cv::Mat& frame);
 
 private:
     const Properties* m_properties;
@@ -47,7 +55,9 @@ private:
     bool m_loop;
     int m_totalFrameCount;
 
-    cv::VideoCapture capture;
+    QScopedPointer<ImageProcessor> m_worker;
+    cv::VideoCapture m_capture;
+    cv::Mat m_frame;
 };
 
 #endif // PLAYER_H

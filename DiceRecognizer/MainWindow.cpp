@@ -34,14 +34,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect( m_playerControlls, &PlayerControls::pause, m_player, &Player::pause );
     connect( m_playerControlls, &PlayerControls::stop, m_player, &Player::stop );
     connect( m_playerControlls, &PlayerControls::loop, m_player, &Player::setLoop );
+    connect( m_playerControlls, &PlayerControls::next, m_player, &Player::nextFrame );
+    connect( m_playerControlls, &PlayerControls::previous, m_player, &Player::previousFrame );
     connect( m_player, &Player::resultReady, this, &MainWindow::updateImages );
     connect( m_player, &Player::totalFrameCount, m_playerControlls, &PlayerControls::setTotalTime );
     connect( m_player, &Player::currentFrameNumber, m_playerControlls, &PlayerControls::setCurrentTime );
+    connect( m_player, &Player::singleImage, m_playerControlls, &PlayerControls::disableControls );
 
     m_properties->setContrast( 60 );
     m_properties->setThreshold( 172 );
     m_properties->setDilatation( 2 );
     m_properties->setErosion( 1 );
+    m_properties->setDiceSize( 25 );
+    m_properties->setDotSize( 3 );
 
     m_tabWidget->addTab( m_input, tr("Input") );
     m_tabWidget->addTab( m_gray, tr("Gray") );
@@ -68,11 +73,6 @@ MainWindow::~MainWindow()
         m_player->stop();
         m_player->quit();
     }
-}
-
-void MainWindow::openImage()
-{
-    openFile();
 }
 
 void MainWindow::showProperties()
@@ -106,15 +106,15 @@ void MainWindow::createMenu()
 {
     m_fileMenu = menuBar()->addMenu( tr("File") );
 
-    m_fileMenu->addAction( m_openImageAct );
+    m_fileMenu->addAction( m_openFileAct );
     m_fileMenu->addAction( m_showPropertiesAct );
 }
 
 void MainWindow::createActions()
 {
-    m_openImageAct = new QAction( tr("Open Image") + "..." );
+    m_openFileAct = new QAction( tr("Open Image") + "..." );
 
-    connect( m_openImageAct, &QAction::triggered, this, &MainWindow::openImage );
+    connect( m_openFileAct, &QAction::triggered, this, &MainWindow::openFile );
 
     m_showPropertiesAct = new QAction( tr("Show Properties") + "..." );
 

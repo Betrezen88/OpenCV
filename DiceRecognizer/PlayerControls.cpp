@@ -20,12 +20,12 @@ PlayerControls::PlayerControls(QWidget *parent)
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeLabel( new QLabel("0 / 0", this) )
 {
-    connect( m_stop, &QPushButton::clicked, [=]() { emit stop(); } );
-    connect( m_play, &QPushButton::clicked, [=]() { emit play(); } );
-    connect( m_pause, &QPushButton::clicked, [=]() { emit pause(); } );
-    connect( m_previous, &QPushButton::clicked, [=]() { emit previous(); } );
-    connect( m_next, &QPushButton::clicked, [=]() { emit next(); } );
-    connect( m_loop, &QCheckBox::clicked, [=]() { emit loop(m_loop->isChecked()); } );
+    connect( m_stop, &QPushButton::clicked, this, &PlayerControls::stop );
+    connect( m_play, &QPushButton::clicked, this, &PlayerControls::play );
+    connect( m_pause, &QPushButton::clicked, this, &PlayerControls::pause );
+    connect( m_previous, &QPushButton::clicked, this, &PlayerControls::previous );
+    connect( m_next, &QPushButton::clicked, this, &PlayerControls::next );
+    connect( m_loop, &QCheckBox::clicked, this, &PlayerControls::loop );
 
     QHBoxLayout* all = new QHBoxLayout;
     all->addWidget( m_previous );
@@ -50,4 +50,12 @@ void PlayerControls::setCurrentTime(int t)
 {
     m_time->setValue( t );
     m_timeLabel->setText( QString("%1 / %2").arg(t).arg(m_time->maximum()) );
+}
+
+void PlayerControls::disableControls(bool y)
+{
+    m_stop->setDisabled( y );
+    m_pause->setDisabled( y );
+    m_previous->setDisabled( y );
+    m_next->setDisabled( y );
 }

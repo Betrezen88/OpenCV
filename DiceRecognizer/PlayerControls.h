@@ -25,6 +25,7 @@ signals:
 public slots:
     void setTotalTime(int t);
     void setCurrentTime(int t);
+    void disableControls(bool y);
 
 private:
     QPushButton* m_stop;

@@ -13,8 +13,9 @@ public:
     ~Dice();
 
     void draw(cv::Mat &image);
-    cv::Rect boundingBox() { return m_boundingBox; }
-    QVector<cv::Point> dots() { return m_dots; }
+    void addDot(const cv::Point dot);
+    const cv::Rect& boundingBox() const { return m_boundingBox; }
+    const QVector<cv::Point>& dots() const { return m_dots; }
 
 private:
     cv::Rect m_boundingBox;

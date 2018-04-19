@@ -17,8 +17,8 @@ Dice::~Dice()
 
 void Dice::draw(cv::Mat& image)
 {
-//    if (m_dots.isEmpty())
-//        return;
+    if (m_dots.isEmpty())
+        return;
 
     cv::rectangle(image, m_boundingBox, m_color, 2);
 
@@ -32,4 +32,9 @@ void Dice::draw(cv::Mat& image)
                 1.0,
                 cv::Scalar(0.0, 255.0, 0.0),
                 2);
+}
+
+void Dice::addDot(const cv::Point dot)
+{
+    m_dots.append( dot );
 }

@@ -5,6 +5,7 @@
 Player::Player(const Properties* properties)
     : m_properties(properties)
 {
+    m_worker.reset( new ImageProcessor(m_properties) );
     stop();
     m_pause = false;
 }
@@ -30,6 +31,25 @@ void Player::stop()
 void Player::setLoop(bool l)
 {
     m_loop = l;
+}
+
+void Player::nextFrame()
+{
+    if ( !isPaused() )
+        pause();
+
+    if ( readNonEmptyFrame(m_frame) )
+        processFrame( m_frame );
+}
+
+void Player::previousFrame()
+{
+    if ( !isPaused() )
+        pause();
+
+    m_capture.set( CV_CAP_PROP_POS_FRAMES, m_capture.get(CV_CAP_PROP_POS_FRAMES)-2.0 );
+    if ( readNonEmptyFrame(m_frame) )
+        processFrame( m_frame );
 }
 
 bool Player::isStopped()
@@ -60,34 +80,46 @@ void Player::pause()
 
 void Player::run()
 {
-    capture.open( m_filePath.toStdString() );
-    if ( capture.isOpened() )
+    m_capture.open( m_filePath.toStdString() );
+    if ( m_capture.isOpened() )
     {
-        int delay = ( 1000 / static_cast<int>(capture.get(CV_CAP_PROP_FPS)) );
-        m_totalFrameCount = static_cast<int>( capture.get(CV_CAP_PROP_FRAME_COUNT) );
+        int delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
+        m_totalFrameCount = static_cast<int>( m_capture.get(CV_CAP_PROP_FRAME_COUNT) );
         emit totalFrameCount( m_totalFrameCount );
+        emit singleImage( m_totalFrameCount == 1 );
 
-        cv::Mat frame;
         while ( !isStopped() )
         {
-            while ( !isPaused() )
+            if ( !isPaused() )
             {
-                if ( !capture.read(frame) )
+                if ( !m_capture.read(m_frame) )
                 {
                     if ( !m_loop )
                         stop();
                     else
-                        capture.open( m_filePath.toStdString() );
+                        m_capture.open( m_filePath.toStdString() );
                 }
 
-                if ( !frame.empty() )
-                {
-                    emit currentFrameNumber( static_cast<int>(capture.get(CV_CAP_PROP_POS_FRAMES)) );
-                    ImageProcessor worker(m_properties);
-                    emit resultReady( worker.processImage(frame) );
-                }
+                if ( !m_frame.empty() )
+                    processFrame( m_frame );
                 msleep( delay );
             }
+            else
+                processFrame( m_frame );
         }
     }
+}
+
+bool Player::readNonEmptyFrame(cv::Mat &frame)
+{
+    if ( m_capture.read(frame) )
+        if ( !m_frame.empty() )
+            return true;
+    return false;
+}
+
+void Player::processFrame(const cv::Mat &frame)
+{
+    emit currentFrameNumber( static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES)) );
+    emit resultReady( m_worker->processImage(frame) );
 }

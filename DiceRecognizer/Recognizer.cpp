@@ -1,31 +1,33 @@
 #include "Recognizer.h"
 
-Recognizer::Recognizer()
+Recognizer::Recognizer(const Properties* properties)
+    : m_properties(properties)
 {
 
 }
 
 void Recognizer::recognize(const cv::Mat image)
 {
-    cv::Rect rect;
-    for(int y = 25; y < image.rows; ++y)
-        for(int x = 25; x < image.cols; ++x)
-            if (image.at<uchar>(y, x) == 255)
-                recognizeDices(x, y, rect, image);
-            else if (image.at<uchar>(y, x) == 0)
-                recognizeDots(x, y, rect, image);
+    for( int y = m_properties->diceSize(); y < image.rows; ++y )
+        for( int x = m_properties->diceSize(); x < image.cols; ++x )
+            if ( image.at<uchar>(y, x) == diceColor() )
+                recognizeDices(x, y, m_rect, image);
+            else if ( image.at<uchar>(y, x) == dotColor() )
+                recognizeDots(x, y, m_rect, image);
 }
 
 void Recognizer::drawFoundDices(cv::Mat &image)
 {
     int dots = 0;
-    for (Dice& dice : m_dices)
+
+    for(Dice& dice : m_dices)
     {
-//        if (dice.dots().isEmpty())
-//            continue;
+        if (dice.dots().isEmpty())
+            continue;
         dots += dice.dots().size();
         dice.draw(image);
     }
+
     cv::putText(image,
                 "Dice count: " + QString::number(m_dices.size()).toStdString(),
                 cv::Point(5, 25),
@@ -51,11 +53,8 @@ void Recognizer::recognizeDices(int x, int y, cv::Rect& rect, const cv::Mat &ima
                   cv::Scalar::all(0.0),
                   cv::Scalar::all(0.0),
                   CV_FLOODFILL_FIXED_RANGE);
-    if (rect.width > 25 && rect.height > 25 )
-    {
-        Dice dice(rect);
-        m_dices.append( dice );
-    }
+    if ( rect.width > m_properties->diceSize() && rect.height > m_properties->diceSize() )
+        m_dices.append( Dice(rect) );
     else
         cv::floodFill(image,
                       cv::Point(x, y),
@@ -75,14 +74,15 @@ void Recognizer::recognizeDots(int x, int y, cv::Rect &rect, const cv::Mat &imag
                   cv::Scalar::all(0.0),
                   cv::Scalar::all(0.0),
                   CV_FLOODFILL_FIXED_RANGE);
-    if (rect.width < 25 && rect.height < 25
-        && rect.width > 3 && rect.height > 3)
+
+    if ( (rect.width < m_properties->diceSize()) && (rect.height < m_properties->diceSize())
+         && (rect.width > m_properties->dotSize()) && (rect.height > m_properties->dotSize()) )
     {
         cv::Point dot(rect.x + rect.width / 2, rect.y + rect.height / 2);
         for (Dice& dice : m_dices)
             if (dice.boundingBox().contains(dot))
             {
-                dice.dots().append(dot);
+                dice.addDot( dot );
                 break;
             }
     }
@@ -96,4 +96,18 @@ void Recognizer::recognizeDots(int x, int y, cv::Rect &rect, const cv::Mat &imag
                       cv::Scalar::all(0.0),
                       CV_FLOODFILL_FIXED_RANGE);
     }
+}
+
+int Recognizer::diceColor() const
+{
+    if ( (m_properties->thresholdType() == 1) || (m_properties->thresholdType() == 4) )
+        return 0;
+    return 255;
+}
+
+int Recognizer::dotColor() const
+{
+    if ( (m_properties->thresholdType() == 1) || (m_properties->thresholdType() == 4) )
+        return 255;
+    return 0;
 }
