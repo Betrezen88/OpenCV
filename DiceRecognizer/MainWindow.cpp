@@ -3,12 +3,29 @@
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
+#include <QTabWidget>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      m_tabs( new QTabWidget(this) ),
+      m_input( new ImageWidget(this) ),
+      m_gray( new ImageWidget(this) ),
+      m_threshold( new ImageWidget(this) ),
+      m_filter( new ImageWidget(this) ),
+      m_output( new ImageWidget(this) )
 {
     createActions();
     createMenu();
+
+    m_tabs->addTab( m_input, tr("Input") );
+    m_tabs->addTab( m_gray, tr("Gray") );
+    m_tabs->addTab( m_threshold, tr("Threshold") );
+    m_tabs->addTab( m_filter, tr("Filter") );
+    m_tabs->addTab( m_output, tr("Output") );
+
+    setCentralWidget( m_tabs );
+
+    setMinimumSize( 400, 300 );
 }
 
 MainWindow::~MainWindow()

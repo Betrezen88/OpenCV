@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 
+#include "ImageWidget.h"
+
 class QAction;
 class QMenu;
+class QTabWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -22,6 +25,14 @@ private:
     void createMenu();
 
 private:
+    QTabWidget* m_tabs;
+
+    ImageWidget* m_input;
+    ImageWidget* m_gray;
+    ImageWidget* m_threshold;
+    ImageWidget* m_filter;
+    ImageWidget* m_output;
+
     QMenu* m_fileMenu;
 
     QAction* m_openFileAct;
