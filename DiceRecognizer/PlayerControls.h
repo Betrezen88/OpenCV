@@ -15,6 +15,12 @@ public:
     explicit PlayerControls(QWidget *parent = 0);
 
 signals:
+    void stop();
+    void play();
+    void pause();
+    void previous();
+    void next();
+    void loop();
 
 public slots:
 

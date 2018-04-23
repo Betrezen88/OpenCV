@@ -17,6 +17,13 @@ PlayerControls::PlayerControls(QWidget *parent)
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeL( new QLabel("--/--") )
 {
+    connect( m_stopBtn, &QPushButton::clicked, this, &PlayerControls::stop );
+    connect( m_playBtn, &QPushButton::clicked, this, &PlayerControls::play );
+    connect( m_pauseBtn, &QPushButton::clicked, this, &PlayerControls::pause );
+    connect( m_previousBtn, &QPushButton::clicked, this, &PlayerControls::previous );
+    connect( m_nextBtn, &QPushButton::clicked, this, &PlayerControls::next );
+    connect( m_loop, &QCheckBox::clicked, this, &PlayerControls::loop );
+
     QHBoxLayout *all = new QHBoxLayout;
     all->addWidget( m_previousBtn );
     all->addWidget( m_stopBtn );
