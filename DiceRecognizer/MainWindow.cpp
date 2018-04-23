@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QTabWidget>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -13,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_gray( new ImageWidget(this) ),
       m_threshold( new ImageWidget(this) ),
       m_filter( new ImageWidget(this) ),
-      m_output( new ImageWidget(this) )
+      m_output( new ImageWidget(this) ),
+      m_playerControls( new PlayerControls(this) )
 {
     createActions();
     createMenu();
@@ -24,7 +26,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_tabs->addTab( m_filter, tr("Filter") );
     m_tabs->addTab( m_output, tr("Output") );
 
-    setCentralWidget( m_tabs );
+    QWidget* widget = new QWidget( this );
+
+    QVBoxLayout* all = new QVBoxLayout;
+    all->addWidget( m_playerControls );
+    all->addWidget( m_tabs );
+
+    widget->setLayout( all );
+
+    setCentralWidget( widget );
 
     setMinimumSize( 400, 300 );
 }

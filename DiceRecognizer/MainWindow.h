@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "ImageWidget.h"
+#include "PlayerControls.h"
 
 class QAction;
 class QMenu;
@@ -32,6 +33,8 @@ private:
     ImageWidget* m_threshold;
     ImageWidget* m_filter;
     ImageWidget* m_output;
+
+    PlayerControls* m_playerControls;
 
     QMenu* m_fileMenu;
 
