@@ -16,7 +16,9 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lope
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-        ImageWidget.cpp
+        ImageWidget.cpp \
+    PlayerControls.cpp
 
 HEADERS  += MainWindow.h \
-        ImageWidget.h
+        ImageWidget.h \
+    PlayerControls.h
