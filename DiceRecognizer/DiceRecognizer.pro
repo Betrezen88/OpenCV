@@ -15,6 +15,8 @@ INCLUDEPATH += /usr/local/include/opencv
 LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc -lopencv_videoio
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+        ImageWidget.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+        ImageWidget.h
