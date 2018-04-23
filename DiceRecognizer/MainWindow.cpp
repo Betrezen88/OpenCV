@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include <QAction>
+#include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
 #include <QTabWidget>
@@ -35,6 +36,10 @@ MainWindow::~MainWindow()
 
 bool MainWindow::openFile()
 {
+    m_filePath.clear();
+    m_filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", "");
+    if ( m_filePath.isEmpty() )
+        return false;
     return true;
 }
 

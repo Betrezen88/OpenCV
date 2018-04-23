@@ -37,6 +37,8 @@ private:
 
     QAction* m_openFileAct;
     QAction* m_quitAct;
+
+    QString m_filePath;
 };
 
 #endif // MAINWINDOW_H
