@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+class QAction;
+class QMenu;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +13,19 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    bool openFile();
+
+private:
+    void createActions();
+    void createMenu();
+
+private:
+    QMenu* m_fileMenu;
+
+    QAction* m_openFileAct;
+    QAction* m_quitAct;
 };
 
 #endif // MAINWINDOW_H
