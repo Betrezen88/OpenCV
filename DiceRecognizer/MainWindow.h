@@ -2,13 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QScopedPointer>
 
 #include "ImageWidget.h"
+#include "Player.h"
 #include "PlayerControls.h"
 
 class QAction;
 class QMenu;
 class QTabWidget;
+class QThread;
 
 class MainWindow : public QMainWindow
 {
@@ -20,10 +23,12 @@ public:
 
 public slots:
     bool openFile();
+    void play();
 
 private:
     void createActions();
     void createMenu();
+    void setConnections(QThread* thread, Player* worker);
 
 private:
     QTabWidget* m_tabs;
@@ -42,6 +47,9 @@ private:
     QAction* m_quitAct;
 
     QString m_filePath;
+
+    QThread* m_thread { 0 };
+    Player* m_worker { 0 };
 };
 
 #endif // MAINWINDOW_H

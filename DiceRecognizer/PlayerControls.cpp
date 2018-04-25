@@ -6,6 +6,8 @@
 #include <QSlider>
 #include <QHBoxLayout>
 
+#include <QDebug>
+
 PlayerControls::PlayerControls(QWidget *parent)
     : QWidget(parent),
       m_stopBtn( new QPushButton(tr("[]"), this) ),

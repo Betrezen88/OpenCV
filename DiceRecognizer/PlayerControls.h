@@ -20,7 +20,7 @@ signals:
     void pause();
     void previous();
     void next();
-    void loop();
+    void loop(const bool l);
 
 public slots:
 
