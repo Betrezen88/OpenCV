@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     Player.cpp \
     Properties.cpp \
     ImageProcessor.cpp \
-    Dice.cpp
+    Dice.cpp \
+    Recognizer.cpp
 
 HEADERS  += MainWindow.h \
         ImageWidget.h \
@@ -29,4 +30,5 @@ HEADERS  += MainWindow.h \
     Player.h \
     Properties.h \
     ImageProcessor.h \
-    Dice.h
+    Dice.h \
+    Recognizer.h
