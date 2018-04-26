@@ -40,9 +40,9 @@ void Player::process()
         m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
         emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
 
-        while ( !m_stop )
+        while ( true )
         {
-            if ( !m_pause )
+            if ( !m_stop && !m_pause )
             {
                 if ( !m_capture.read( m_frame ) )
                 {
@@ -53,8 +53,7 @@ void Player::process()
                 }
                 if ( !m_frame.empty() )
                 {
-                    emit newCurrentFrameNumber( static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES)) );
-                    emit resultReady( m_imgProc->processImage(m_frame) );
+                    processImage( m_frame );
                     QThread::currentThread()->msleep( m_delay );
                 }
             }
@@ -66,7 +65,7 @@ void Player::stop()
 {
     qDebug() << "Player::stop()";
     m_stop = true;
-    emit finished();
+    m_capture.set( CV_CAP_PROP_POS_FRAMES, 0 );
 }
 
 void Player::play()
@@ -84,7 +83,10 @@ void Player::pause()
 
 void Player::next()
 {
-    m_pause = true;
+    if ( !m_pause ) m_pause = true;
+
+    if ( readNonEmptyFrame(m_frame) )
+        processImage( m_frame );
 }
 
 void Player::previous()
@@ -96,4 +98,18 @@ void Player::loop(const bool l)
 {
     if ( l != m_loop )
         m_loop = l;
+}
+
+void Player::processImage(const cv::Mat &img)
+{
+    emit newCurrentFrameNumber( static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES)) );
+    emit resultReady( m_imgProc->processImage(img) );
+}
+
+bool Player::readNonEmptyFrame(const cv::Mat &frame)
+{
+    if ( m_capture.read(frame) )
+        if ( !m_frame.empty() )
+            return true;
+    return false;
 }
