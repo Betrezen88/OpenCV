@@ -18,9 +18,11 @@ SOURCES += main.cpp\
         MainWindow.cpp \
         ImageWidget.cpp \
     PlayerControls.cpp \
-    Player.cpp
+    Player.cpp \
+    Properties.cpp
 
 HEADERS  += MainWindow.h \
         ImageWidget.h \
     PlayerControls.h \
-    Player.h
+    Player.h \
+    Properties.h
