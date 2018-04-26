@@ -6,11 +6,13 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
 
+#include "Properties.h"
+
 class Player : public QObject
 {
     Q_OBJECT
 public:
-    explicit Player(QObject *parent = 0);
+    explicit Player(const Properties* properties, QObject *parent = 0);
     ~Player();
 
     void setFilePath(const QString& filePath);
@@ -32,6 +34,7 @@ public slots:
     void loop(const bool l);
 
 private:
+    const Properties* m_properties;
     QString m_filePath;
     bool m_stop;
     bool m_pause;

@@ -4,8 +4,9 @@
 
 #include <QDebug>
 
-Player::Player(QObject *parent)
+Player::Player(const Properties *properties, QObject *parent)
     : QObject(parent),
+      m_properties( properties ),
       m_stop(false),
       m_pause(true),
       m_loop( false )

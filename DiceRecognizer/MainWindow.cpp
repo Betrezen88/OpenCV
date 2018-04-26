@@ -18,10 +18,18 @@ MainWindow::MainWindow(QWidget *parent)
       m_threshold( new ImageWidget(this) ),
       m_filter( new ImageWidget(this) ),
       m_output( new ImageWidget(this) ),
-      m_playerControls( new PlayerControls(this) )
+      m_playerControls( new PlayerControls(this) ),
+      m_properties( new Properties(this) )
 {
     createActions();
     createMenu();
+
+    m_properties->setContrast( 60 );
+    m_properties->setThreshold( 172 );
+    m_properties->setDilatation( 2 );
+    m_properties->setErosion( 1 );
+    m_properties->setDiceSize( 25 );
+    m_properties->setDotSize( 3 );
 
     m_tabs->addTab( m_input, tr("Input") );
     m_tabs->addTab( m_gray, tr("Gray") );
@@ -55,7 +63,7 @@ void MainWindow::openFile()
     {
         if ( m_thread.isNull() )
         {
-            m_player.reset( new Player() );
+            m_player.reset( new Player(m_properties) );
             m_thread.reset( new QThread );
 
             m_player->setFilePath( m_filePath );
@@ -67,6 +75,11 @@ void MainWindow::openFile()
         else
             m_player->setFilePath( m_filePath );
     }
+}
+
+void MainWindow::openProperties()
+{
+    m_properties->show();
 }
 
 void MainWindow::clean()
@@ -87,9 +100,11 @@ void MainWindow::updateImages(const cv::Mat img)
 void MainWindow::createActions()
 {
     m_openFileAct = new QAction( tr("Open File"), this );
+    m_openPropertiesAct = new QAction( tr("Open Properties"), this);
     m_quitAct = new QAction( tr("Quit"), this );
 
     connect( m_openFileAct, &QAction::triggered, this, &MainWindow::openFile );
+    connect( m_openPropertiesAct, &QAction::triggered, this, &MainWindow::openProperties );
     connect( m_quitAct, &QAction::triggered, this, &MainWindow::close );
 }
 
@@ -98,6 +113,7 @@ void MainWindow::createMenu()
     m_fileMenu = menuBar()->addMenu( tr("File") + "..." );
 
     m_fileMenu->addAction( m_openFileAct );
+    m_fileMenu->addAction( m_openPropertiesAct );
     m_fileMenu->addAction( m_quitAct );
 }
 

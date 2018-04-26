@@ -8,6 +8,7 @@
 #include "ImageWidget.h"
 #include "Player.h"
 #include "PlayerControls.h"
+#include "Properties.h"
 
 class QAction;
 class QMenu;
@@ -23,6 +24,7 @@ public:
 
 public slots:
     void openFile();
+    void openProperties();
 
 private slots:
     void clean();
@@ -44,9 +46,12 @@ private:
 
     PlayerControls* m_playerControls;
 
+    Properties* m_properties;
+
     QMenu* m_fileMenu;
 
     QAction* m_openFileAct;
+    QAction* m_openPropertiesAct;
     QAction* m_quitAct;
 
     QString m_filePath;
