@@ -18,8 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_threshold( new ImageWidget(this) ),
       m_filter( new ImageWidget(this) ),
       m_output( new ImageWidget(this) ),
-      m_playerControls( new PlayerControls(this) ),
-      m_exists( false )
+      m_playerControls( new PlayerControls(this) )
 {
     createActions();
     createMenu();
@@ -104,6 +103,8 @@ void MainWindow::createMenu()
 
 void MainWindow::setConnections(QThread *thread, Player *worker)
 {
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+
     connect( m_playerControls, &PlayerControls::stop,       worker, &Player::stop, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::play,       worker, &Player::play, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::pause,      worker, &Player::pause, Qt::DirectConnection );
@@ -111,7 +112,8 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( m_playerControls, &PlayerControls::previous,   worker, &Player::previous, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop, Qt::DirectConnection );
 
-    connect( worker, &Player::newFrameCount,    m_playerControls, &PlayerControls::updateFrameCount, Qt::DirectConnection );
+    connect( worker, &Player::newFrameCount, m_playerControls, &PlayerControls::updateFrameCount, Qt::DirectConnection );
+    connect( worker, &Player::newCurrentFrameNumber, m_playerControls, &PlayerControls::updateCurrentFrameNumber, Qt::DirectConnection );
 
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );

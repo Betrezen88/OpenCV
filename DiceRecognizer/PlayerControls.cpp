@@ -44,3 +44,9 @@ void PlayerControls::updateFrameCount(const int frameCount)
     m_time->setRange( 1, frameCount );
     m_timeL->setText( QString("0 / %1").arg(frameCount) );
 }
+
+void PlayerControls::updateCurrentFrameNumber(const int frameNumber)
+{
+    m_time->setValue( frameNumber );
+    m_timeL->setText( QString("%1 / %2").arg(frameNumber).arg(m_time->maximum()) );
+}

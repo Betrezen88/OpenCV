@@ -53,8 +53,6 @@ private:
 
     QScopedPointer<Player> m_player { nullptr };
     QScopedPointer<QThread> m_thread { nullptr };
-
-    bool m_exists;
 };
 
 #endif // MAINWINDOW_H

@@ -24,6 +24,7 @@ signals:
 
 public slots:
     void updateFrameCount(const int frameCount);
+    void updateCurrentFrameNumber(const int frameNumber);
 
 private:
     QPushButton* m_stopBtn;
