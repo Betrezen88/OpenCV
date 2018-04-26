@@ -9,16 +9,15 @@ class Player : public QObject
 {
     Q_OBJECT
 public:
-    enum class State { STOP, PLAY, PAUSE };
-
     explicit Player(QObject *parent = 0);
     ~Player();
 
     void setFilePath(const QString& filePath);
     const QString filePath() const;
 
+    bool isWorking() const;
+
 signals:
-    void stateChanged(const State state);
     void resultReady(const cv::Mat img);
     void finished();
 
@@ -33,7 +32,9 @@ public slots:
 
 private:
     QString m_filePath;
-    State m_state;
+    bool m_working;
+    bool m_stop;
+    bool m_pause;
     bool m_loop;
 };
 

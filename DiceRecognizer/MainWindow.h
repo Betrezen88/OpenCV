@@ -22,8 +22,7 @@ public:
     ~MainWindow();
 
 public slots:
-    bool openFile();
-    void play();
+    void openFile();
 
 private:
     void createActions();

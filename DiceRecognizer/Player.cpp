@@ -6,7 +6,8 @@
 
 Player::Player(QObject *parent)
     : QObject(parent),
-      m_state( State::STOP ),
+      m_stop(false),
+      m_pause(false),
       m_loop( false )
 {
 
@@ -28,11 +29,17 @@ const QString Player::filePath() const
     return m_filePath;
 }
 
+bool Player::isWorking() const
+{
+    return m_working;
+}
+
 void Player::process()
 {
-    while ( m_state != State::STOP )
+    m_working = true;
+    while ( !m_stop )
     {
-        if ( m_state != State::PAUSE )
+        if ( !m_pause )
         {
             if ( m_loop )
                 qDebug() << "Loop video !";
@@ -44,32 +51,32 @@ void Player::process()
 
 void Player::stop()
 {
-    m_state = State::STOP;
-    emit stateChanged( m_state );
+    qDebug() << "Player::stop()";
+    m_stop = true;
+    emit finished();
 }
 
 void Player::play()
 {
-    m_state = State::PLAY;
-    emit stateChanged( m_state );
-
-    process();
+    qDebug() << "Player::play()";
+    m_stop = false;
+    m_pause = false;
 }
 
 void Player::pause()
 {
-    m_state = State::PAUSE;
-    emit stateChanged( m_state );
+    qDebug() << "Player::pause()";
+    m_pause = true;
 }
 
 void Player::next()
 {
-    m_state = State::PAUSE;
+    m_pause = true;
 }
 
 void Player::previous()
 {
-    m_state = State::PAUSE;
+    m_pause = true;
 }
 
 void Player::loop(const bool l)

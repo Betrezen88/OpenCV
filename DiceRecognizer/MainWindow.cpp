@@ -23,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenu();
 
-    connect( m_playerControls, &PlayerControls::play, this, &MainWindow::play );
-
     m_tabs->addTab( m_input, tr("Input") );
     m_tabs->addTab( m_gray, tr("Gray") );
     m_tabs->addTab( m_threshold, tr("Threshold") );
@@ -49,30 +47,23 @@ MainWindow::~MainWindow()
 
 }
 
-bool MainWindow::openFile()
+void MainWindow::openFile()
 {
     m_filePath.clear();
     m_filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", "");
-    if ( m_filePath.isEmpty() )
-        return false;
-    return true;
-}
+    if ( !m_filePath.isEmpty() )
+    {
+        if ( m_worker == nullptr ) m_worker = new Player();
+        if ( m_thread == nullptr ) m_thread = new QThread;
 
-void MainWindow::play()
-{
-    if ( m_filePath.isEmpty() )
-        if( !openFile() )
-            return;
-
-    m_thread = new QThread;
-    m_worker = new Player();
-    m_worker->setFilePath( m_filePath );
-
-    setConnections( m_thread, m_worker );
-
-    m_worker->moveToThread( m_thread );
-
-    m_thread->start();
+        if ( !m_worker->isWorking() )
+        {
+            m_worker->setFilePath( m_filePath );
+            setConnections( m_thread, m_worker );
+            m_worker->moveToThread( m_thread );
+            m_thread->start();
+        }
+    }
 }
 
 void MainWindow::createActions()
@@ -95,13 +86,15 @@ void MainWindow::createMenu()
 void MainWindow::setConnections(QThread *thread, Player *worker)
 {
     connect( m_playerControls, &PlayerControls::stop,       worker, &Player::stop, Qt::DirectConnection );
+    connect( m_playerControls, &PlayerControls::play,       worker, &Player::play, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::pause,      worker, &Player::pause, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::next,       worker, &Player::next, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::previous,   worker, &Player::previous, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop, Qt::DirectConnection );
 
-    connect( thread, &QThread::started,     worker, &Player::play, Qt::DirectConnection );
+    connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );
     connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
     connect( thread, &QThread::finished,    thread, &QThread::deleteLater, Qt::DirectConnection );
 }
+
