@@ -14,7 +14,7 @@ ImageProcessor::~ImageProcessor()
 
 }
 
-QVector<cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
+const QHash<QString, cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
 {
     cv::Mat input = img;
     cv::Mat gray;
@@ -49,12 +49,12 @@ QVector<cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
     recog.recognize( filter );
     recog.drawFoundDices( output );
 
-    QVector<cv::Mat> result;
-    result.append( input );
-    result.append( gray );
-    result.append( threshold );
-    result.append( filter );
-    result.append( output );
+    QHash<QString, cv::Mat> result;
+    result.insert( "input", input );
+    result.insert( "gray", gray );
+    result.insert( "threshold", threshold );
+    result.insert( "filter", filter );
+    result.insert( "output", output );
 
     return result;
 }

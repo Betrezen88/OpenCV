@@ -2,7 +2,7 @@
 #define IMAGEPROCESSOR_H
 
 #include <QObject>
-#include <QVector>
+#include <QHash>
 #include <QImage>
 
 #include <opencv2/opencv.hpp>
@@ -17,10 +17,10 @@ public:
     ~ImageProcessor();
 
 signals:
-    void resultReady(const QVector<cv::Mat> images);
+    void resultReady(const QHash<QString, cv::Mat> images);
 
 public slots:
-    QVector<cv::Mat> processImage(const cv::Mat &img);
+    const QHash<QString, cv::Mat> processImage(const cv::Mat &img);
 
 private:
     void enhance(cv::Mat img, double alpha);

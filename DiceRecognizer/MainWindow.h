@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QHash>
 #include <QScopedPointer>
 #include <QThread>
 
@@ -28,7 +29,7 @@ public slots:
 
 private slots:
     void clean();
-    void updateImages(const cv::Mat img);
+    void updateImages(const QHash<QString, cv::Mat> images);
 
 private:
     void createActions();

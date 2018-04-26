@@ -7,6 +7,7 @@
 Player::Player(const Properties *properties, QObject *parent)
     : QObject(parent),
       m_properties( properties ),
+      m_imgProc( new ImageProcessor(m_properties) ),
       m_stop(false),
       m_pause(true),
       m_loop( false )
@@ -53,7 +54,7 @@ void Player::process()
                 if ( !m_frame.empty() )
                 {
                     emit newCurrentFrameNumber( static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES)) );
-                    emit resultReady( m_frame );
+                    emit resultReady( m_imgProc->processImage(m_frame) );
                     QThread::currentThread()->msleep( m_delay );
                 }
             }

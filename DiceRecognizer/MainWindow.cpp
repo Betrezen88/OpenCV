@@ -92,9 +92,13 @@ void MainWindow::clean()
     }
 }
 
-void MainWindow::updateImages(const cv::Mat img)
+void MainWindow::updateImages(const QHash<QString, cv::Mat> images)
 {
-    m_input->showImage( img );
+    m_input->showImage( images.value("input") );
+    m_gray->showImage( images.value("gray") );
+    m_threshold->showImage( images.value("threshold") );
+    m_filter->showImage( images.value("filter") );
+    m_output->showImage( images.value("output") );
 }
 
 void MainWindow::createActions()
@@ -119,7 +123,7 @@ void MainWindow::createMenu()
 
 void MainWindow::setConnections(QThread *thread, Player *worker)
 {
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    qRegisterMetaType<QHash<QString, cv::Mat>>("QHash<QString, cv::Mat>");
 
     connect( m_playerControls, &PlayerControls::stop,       worker, &Player::stop, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::play,       worker, &Player::play, Qt::DirectConnection );

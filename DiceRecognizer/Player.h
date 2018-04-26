@@ -2,10 +2,12 @@
 #define PLAYER_H
 
 #include <QObject>
+#include <QHash>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
 
+#include "ImageProcessor.h"
 #include "Properties.h"
 
 class Player : public QObject
@@ -21,7 +23,7 @@ public:
 signals:
     void newFrameCount(const int frameCount);
     void newCurrentFrameNumber(const int frameNumber);
-    void resultReady(const cv::Mat img);
+    void resultReady(const QHash<QString, cv::Mat>);
     void finished();
 
 public slots:
@@ -35,10 +37,12 @@ public slots:
 
 private:
     const Properties* m_properties;
-    QString m_filePath;
+    ImageProcessor* m_imgProc;
     bool m_stop;
     bool m_pause;
     bool m_loop;
+
+    QString m_filePath;
 
     cv::VideoCapture m_capture;
     cv::Mat m_frame;
