@@ -15,8 +15,6 @@ public:
     void setFilePath(const QString& filePath);
     const QString filePath() const;
 
-    bool isWorking() const;
-
 signals:
     void resultReady(const cv::Mat img);
     void finished();
@@ -32,7 +30,6 @@ public slots:
 
 private:
     QString m_filePath;
-    bool m_working;
     bool m_stop;
     bool m_pause;
     bool m_loop;

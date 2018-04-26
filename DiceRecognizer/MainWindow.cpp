@@ -18,7 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_threshold( new ImageWidget(this) ),
       m_filter( new ImageWidget(this) ),
       m_output( new ImageWidget(this) ),
-      m_playerControls( new PlayerControls(this) )
+      m_playerControls( new PlayerControls(this) ),
+      m_exists( false )
 {
     createActions();
     createMenu();
@@ -44,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    clean();
 }
 
 void MainWindow::openFile()
@@ -53,16 +54,29 @@ void MainWindow::openFile()
     m_filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", "");
     if ( !m_filePath.isEmpty() )
     {
-        if ( m_worker == nullptr ) m_worker = new Player();
-        if ( m_thread == nullptr ) m_thread = new QThread;
-
-        if ( !m_worker->isWorking() )
+        if ( m_thread.isNull() )
         {
-            m_worker->setFilePath( m_filePath );
-            setConnections( m_thread, m_worker );
-            m_worker->moveToThread( m_thread );
+            m_player.reset( new Player() );
+            m_thread.reset( new QThread );
+
+            m_player->setFilePath( m_filePath );
+            setConnections( m_thread.data(), m_player.data() );
+            m_player->moveToThread( m_thread.data() );
             m_thread->start();
+
         }
+        else
+            m_player->setFilePath( m_filePath );
+    }
+}
+
+void MainWindow::clean()
+{
+    m_player.reset();
+    if ( !m_thread.isNull() )
+    {
+        QThread* tmp = m_thread.take();
+        tmp->deleteLater();
     }
 }
 
@@ -95,6 +109,5 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );
     connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
-    connect( thread, &QThread::finished,    thread, &QThread::deleteLater, Qt::DirectConnection );
+    connect( thread, &QThread::finished,    this, &MainWindow::clean, Qt::DirectConnection );
 }
-

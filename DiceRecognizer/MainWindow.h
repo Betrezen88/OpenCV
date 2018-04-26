@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QScopedPointer>
+#include <QThread>
 
 #include "ImageWidget.h"
 #include "Player.h"
@@ -11,7 +12,6 @@
 class QAction;
 class QMenu;
 class QTabWidget;
-class QThread;
 
 class MainWindow : public QMainWindow
 {
@@ -23,6 +23,9 @@ public:
 
 public slots:
     void openFile();
+
+private slots:
+    void clean();
 
 private:
     void createActions();
@@ -47,8 +50,10 @@ private:
 
     QString m_filePath;
 
-    QThread* m_thread { 0 };
-    Player* m_worker { 0 };
+    QScopedPointer<Player> m_player { nullptr };
+    QScopedPointer<QThread> m_thread { nullptr };
+
+    bool m_exists;
 };
 
 #endif // MAINWINDOW_H

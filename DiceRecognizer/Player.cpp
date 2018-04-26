@@ -7,7 +7,7 @@
 Player::Player(QObject *parent)
     : QObject(parent),
       m_stop(false),
-      m_pause(false),
+      m_pause(true),
       m_loop( false )
 {
 
@@ -29,14 +29,8 @@ const QString Player::filePath() const
     return m_filePath;
 }
 
-bool Player::isWorking() const
-{
-    return m_working;
-}
-
 void Player::process()
 {
-    m_working = true;
     while ( !m_stop )
     {
         if ( !m_pause )
