@@ -20,11 +20,13 @@ SOURCES += main.cpp\
     PlayerControls.cpp \
     Player.cpp \
     Properties.cpp \
-    ImageProcessor.cpp
+    ImageProcessor.cpp \
+    Dice.cpp
 
 HEADERS  += MainWindow.h \
         ImageWidget.h \
     PlayerControls.h \
     Player.h \
     Properties.h \
-    ImageProcessor.h
+    ImageProcessor.h \
+    Dice.h
