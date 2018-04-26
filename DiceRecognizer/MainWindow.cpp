@@ -111,6 +111,8 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( m_playerControls, &PlayerControls::previous,   worker, &Player::previous, Qt::DirectConnection );
     connect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop, Qt::DirectConnection );
 
+    connect( worker, &Player::newFrameCount,    m_playerControls, &PlayerControls::updateFrameCount, Qt::DirectConnection );
+
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );

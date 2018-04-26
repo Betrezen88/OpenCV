@@ -18,7 +18,7 @@ PlayerControls::PlayerControls(QWidget *parent)
       m_loop( new QCheckBox(tr("loop"), this) ),
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeL( new QLabel("--/--") )
-{
+{   
     connect( m_stopBtn, &QPushButton::clicked, this, &PlayerControls::stop );
     connect( m_playBtn, &QPushButton::clicked, this, &PlayerControls::play );
     connect( m_pauseBtn, &QPushButton::clicked, this, &PlayerControls::pause );
@@ -37,4 +37,10 @@ PlayerControls::PlayerControls(QWidget *parent)
     all->addWidget( m_loop );
 
     setLayout( all );
+}
+
+void PlayerControls::updateFrameCount(const int frameCount)
+{
+    m_time->setRange( 1, frameCount );
+    m_timeL->setText( QString("0 / %1").arg(frameCount) );
 }

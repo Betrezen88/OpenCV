@@ -23,6 +23,7 @@ signals:
     void loop(const bool l);
 
 public slots:
+    void updateFrameCount(const int frameCount);
 
 private:
     QPushButton* m_stopBtn;
