@@ -18,6 +18,7 @@ public:
 
 signals:
     void newFrameCount(const int frameCount);
+    void newCurrentFrameNumber(const int frameNumber);
     void resultReady(const cv::Mat img);
     void finished();
 

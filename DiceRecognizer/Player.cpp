@@ -51,6 +51,7 @@ void Player::process()
                 }
                 if ( !m_frame.empty() )
                 {
+                    emit newCurrentFrameNumber( static_cast<int>(m_capture.get(CV_CAP_PROP_POS_FRAMES)) );
                     emit resultReady( m_frame );
                     QThread::currentThread()->msleep( m_delay );
                 }
