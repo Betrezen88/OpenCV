@@ -17,6 +17,7 @@ public:
     const QString filePath() const;
 
 signals:
+    void newFrameCount(const int frameCount);
     void resultReady(const cv::Mat img);
     void finished();
 

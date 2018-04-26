@@ -36,6 +36,8 @@ void Player::process()
     if ( m_capture.isOpened() )
     {
         m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
+        emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
+
         while ( !m_stop )
         {
             if ( !m_pause )
