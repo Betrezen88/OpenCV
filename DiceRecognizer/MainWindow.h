@@ -26,6 +26,7 @@ public slots:
 
 private slots:
     void clean();
+    void updateImages(const cv::Mat img);
 
 private:
     void createActions();

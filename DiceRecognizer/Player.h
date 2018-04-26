@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/videoio.hpp>
 
 class Player : public QObject
 {
@@ -33,6 +34,11 @@ private:
     bool m_stop;
     bool m_pause;
     bool m_loop;
+
+    cv::VideoCapture m_capture;
+    cv::Mat m_frame;
+
+    int m_delay;
 };
 
 #endif // PLAYER_H

@@ -31,14 +31,28 @@ const QString Player::filePath() const
 
 void Player::process()
 {
-    while ( !m_stop )
+    qDebug() << "Player::process()";
+    m_capture.open( m_filePath.toStdString() );
+    if ( m_capture.isOpened() )
     {
-        if ( !m_pause )
+        m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
+        while ( !m_stop )
         {
-            if ( m_loop )
-                qDebug() << "Loop video !";
-            qDebug() << "processing !";
-            QThread::currentThread()->msleep( 1000 );
+            if ( !m_pause )
+            {
+                if ( !m_capture.read( m_frame ) )
+                {
+                    if ( !m_loop )
+                        stop();
+                    else
+                        m_capture.open( m_filePath.toStdString() );
+                }
+                if ( !m_frame.empty() )
+                {
+                    emit resultReady( m_frame );
+                    QThread::currentThread()->msleep( m_delay );
+                }
+            }
         }
     }
 }

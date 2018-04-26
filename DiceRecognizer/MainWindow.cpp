@@ -80,6 +80,11 @@ void MainWindow::clean()
     }
 }
 
+void MainWindow::updateImages(const cv::Mat img)
+{
+    m_input->showImage( img );
+}
+
 void MainWindow::createActions()
 {
     m_openFileAct = new QAction( tr("Open File"), this );
@@ -107,6 +112,7 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop, Qt::DirectConnection );
 
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
+    connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );
     connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
     connect( thread, &QThread::finished,    this, &MainWindow::clean, Qt::DirectConnection );
