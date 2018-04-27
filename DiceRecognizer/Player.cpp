@@ -59,6 +59,8 @@ void Player::process()
                         m_capture.open( m_filePath.toStdString() );
                 }
             }
+            else if ( m_pause )
+                processImage( m_frame );
         }
     }
 }
