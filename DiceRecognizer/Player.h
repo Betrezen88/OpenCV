@@ -38,6 +38,7 @@ public slots:
 private:
     void processImage(const cv::Mat& img);
     bool readNonEmptyFrame();
+    void resetDisplay();
 
 private:
     const Properties* m_properties;

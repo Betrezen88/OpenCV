@@ -40,6 +40,8 @@ void Player::process()
         m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
         emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
 
+        resetDisplay();
+
         while ( true )
         {
             if ( !m_stop && !m_pause )
@@ -65,9 +67,7 @@ void Player::stop()
 {
     qDebug() << "Player::stop()";
     m_stop = true;
-    m_capture.set( CV_CAP_PROP_POS_FRAMES, 0 );
-    if ( readNonEmptyFrame() )
-        processImage( m_frame );
+    resetDisplay();
 }
 
 void Player::play()
@@ -115,4 +115,11 @@ void Player::processImage(const cv::Mat &img)
 bool Player::readNonEmptyFrame()
 {
     return ( m_capture.read(m_frame) && !m_frame.empty() );
+}
+
+void Player::resetDisplay()
+{
+    m_capture.set( CV_CAP_PROP_POS_FRAMES, 0 );
+    if ( readNonEmptyFrame() )
+        processImage( m_frame );
 }

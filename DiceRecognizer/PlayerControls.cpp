@@ -25,7 +25,6 @@ PlayerControls::PlayerControls(QWidget *parent)
     connect( m_previousBtn, &QPushButton::clicked, this, &PlayerControls::previous );
     connect( m_nextBtn, &QPushButton::clicked, this, &PlayerControls::next );
     connect( m_loop, &QCheckBox::clicked, this, &PlayerControls::loop );
-    connect( m_time, &QSlider::sliderMoved, this, &PlayerControls::timeChanged );
 
     QHBoxLayout *all = new QHBoxLayout;
     all->addWidget( m_previousBtn );
