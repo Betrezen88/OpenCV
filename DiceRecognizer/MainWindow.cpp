@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenu();
 
+    m_playerControls->disable( true );
+
     m_properties->setContrast( 60 );
     m_properties->setThreshold( 172 );
     m_properties->setDilatation( 2 );
@@ -63,6 +65,7 @@ void MainWindow::openFile()
     {
         if ( m_thread.isNull() )
         {
+            m_playerControls->disable( false );
             m_player.reset( new Player(m_properties) );
             m_thread.reset( new QThread );
 

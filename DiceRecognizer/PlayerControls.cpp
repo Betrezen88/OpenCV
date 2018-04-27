@@ -10,11 +10,11 @@
 
 PlayerControls::PlayerControls(QWidget *parent)
     : QWidget(parent),
-      m_stopBtn( new QPushButton(tr("[]"), this) ),
-      m_playBtn( new QPushButton(tr(">"), this) ),
-      m_pauseBtn( new QPushButton(tr("||"), this) ),
-      m_previousBtn( new QPushButton(tr("<<"), this) ),
-      m_nextBtn( new QPushButton(tr(">>"), this) ),
+      m_stopBtn( new QPushButton(QIcon(":/icons/stop.svg"),tr(""), this) ),
+      m_playBtn( new QPushButton(QIcon(":/icons/play.svg"), tr(""), this) ),
+      m_pauseBtn( new QPushButton(QIcon(":/icons/pause.svg"), tr(""), this) ),
+      m_previousBtn( new QPushButton(QIcon(":/icons/previous.svg"), tr(""), this) ),
+      m_nextBtn( new QPushButton(QIcon(":/icons/next.svg"), tr(""), this) ),
       m_loop( new QCheckBox(tr("loop"), this) ),
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeL( new QLabel("--/--") )
@@ -51,4 +51,14 @@ void PlayerControls::updateCurrentFrameNumber(const int frameNumber)
 {
     m_time->setValue( frameNumber );
     m_timeL->setText( QString("%1 / %2").arg(frameNumber).arg(m_time->maximum()) );
+}
+
+void PlayerControls::disable(const bool d)
+{
+    m_stopBtn->setDisabled( d );
+    m_previousBtn->setDisabled( d );
+    m_playBtn->setDisabled( d );
+    m_pauseBtn->setDisabled( d );
+    m_nextBtn->setDisabled( d );
+    m_loop->setDisabled( d );
 }

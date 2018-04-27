@@ -32,3 +32,6 @@ HEADERS  += MainWindow.h \
     ImageProcessor.h \
     Dice.h \
     Recognizer.h
+
+RESOURCES += \
+    icons.qrc
