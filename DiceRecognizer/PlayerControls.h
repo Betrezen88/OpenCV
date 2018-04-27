@@ -21,6 +21,7 @@ signals:
     void previous();
     void next();
     void loop(const bool l);
+    void timeChanged(const int t);
 
 public slots:
     void updateFrameCount(const int frameCount);
