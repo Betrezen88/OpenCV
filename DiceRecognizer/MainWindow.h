@@ -30,6 +30,7 @@ public slots:
 private slots:
     void clean();
     void updateImages(const QHash<QString, cv::Mat> images);
+    void updateSize(const int width, const int height);
 
 private:
     void createActions();

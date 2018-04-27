@@ -104,6 +104,11 @@ void MainWindow::updateImages(const QHash<QString, cv::Mat> images)
     m_output->showImage( images.value("output") );
 }
 
+void MainWindow::updateSize(const int width, const int height)
+{
+    resize( width, height + m_playerControls->height() );
+}
+
 void MainWindow::createActions()
 {
     m_openFileAct = new QAction( tr("Open File"), this );
@@ -137,6 +142,7 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
 
     connect( worker, &Player::newFrameCount, m_playerControls, &PlayerControls::updateFrameCount, Qt::DirectConnection );
     connect( worker, &Player::newCurrentFrameNumber, m_playerControls, &PlayerControls::updateCurrentFrameNumber, Qt::DirectConnection );
+    connect( worker, &Player::newSize, this, &MainWindow::updateSize );
 
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );
