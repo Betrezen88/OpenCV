@@ -91,7 +91,11 @@ void Player::next()
 
 void Player::previous()
 {
-    m_pause = true;
+    if ( !m_pause ) m_pause = true;
+
+    m_capture.set( CV_CAP_PROP_POS_FRAMES, m_capture.get(CV_CAP_PROP_POS_FRAMES)-2.0 );
+    if ( readNonEmptyFrame(m_frame) )
+        processImage( m_frame );
 }
 
 void Player::loop(const bool l)
