@@ -18,7 +18,9 @@ PlayerControls::PlayerControls(QWidget *parent)
       m_loop( new QCheckBox(tr("loop"), this) ),
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeL( new QLabel("--/--") )
-{   
+{
+    m_time->setDisabled(true);
+
     connect( m_stopBtn, &QPushButton::clicked, this, &PlayerControls::stop );
     connect( m_playBtn, &QPushButton::clicked, this, &PlayerControls::play );
     connect( m_pauseBtn, &QPushButton::clicked, this, &PlayerControls::pause );
