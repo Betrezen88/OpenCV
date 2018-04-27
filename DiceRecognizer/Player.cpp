@@ -44,17 +44,17 @@ void Player::process()
         {
             if ( !m_stop && !m_pause )
             {
-                if ( !m_capture.read( m_frame ) )
+                if ( readNonEmptyFrame() )
+                {
+                    processImage( m_frame );
+                    QThread::currentThread()->msleep( m_delay );
+                }
+                else
                 {
                     if ( !m_loop )
                         stop();
                     else
                         m_capture.open( m_filePath.toStdString() );
-                }
-                if ( !m_frame.empty() )
-                {
-                    processImage( m_frame );
-                    QThread::currentThread()->msleep( m_delay );
                 }
             }
         }
@@ -66,6 +66,8 @@ void Player::stop()
     qDebug() << "Player::stop()";
     m_stop = true;
     m_capture.set( CV_CAP_PROP_POS_FRAMES, 0 );
+    if ( readNonEmptyFrame() )
+        processImage( m_frame );
 }
 
 void Player::play()
@@ -85,7 +87,7 @@ void Player::next()
 {
     if ( !m_pause ) m_pause = true;
 
-    if ( readNonEmptyFrame(m_frame) )
+    if ( readNonEmptyFrame() )
         processImage( m_frame );
 }
 
@@ -94,7 +96,7 @@ void Player::previous()
     if ( !m_pause ) m_pause = true;
 
     m_capture.set( CV_CAP_PROP_POS_FRAMES, m_capture.get(CV_CAP_PROP_POS_FRAMES)-2.0 );
-    if ( readNonEmptyFrame(m_frame) )
+    if ( readNonEmptyFrame() )
         processImage( m_frame );
 }
 
@@ -110,10 +112,7 @@ void Player::processImage(const cv::Mat &img)
     emit resultReady( m_imgProc->processImage(img) );
 }
 
-bool Player::readNonEmptyFrame(const cv::Mat &frame)
+bool Player::readNonEmptyFrame()
 {
-    if ( m_capture.read(frame) )
-        if ( !m_frame.empty() )
-            return true;
-    return false;
+    return ( m_capture.read(m_frame) && !m_frame.empty() );
 }
