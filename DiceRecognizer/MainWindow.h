@@ -36,7 +36,6 @@ private:
     void createActions();
     void createMenu();
     void setConnections(QThread* thread, Player* worker);
-    void disconnectPointers(QThread* thread, Player* worker);
 
 private:
     QTabWidget* m_tabs;

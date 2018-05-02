@@ -146,24 +146,3 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
     connect( thread, &QThread::finished,    this, &MainWindow::clean, Qt::DirectConnection );
 }
-
-void MainWindow::disconnectPointers(QThread *thread, Player *worker)
-{
-    disconnect( m_playerControls, &PlayerControls::stop,       worker, &Player::stop );
-    disconnect( m_playerControls, &PlayerControls::play,       worker, &Player::play );
-    disconnect( m_playerControls, &PlayerControls::pause,      worker, &Player::pause );
-    disconnect( m_playerControls, &PlayerControls::next,       worker, &Player::next );
-    disconnect( m_playerControls, &PlayerControls::previous,   worker, &Player::previous );
-    disconnect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop );
-
-    disconnect( worker, &Player::newFrameCount, m_playerControls, &PlayerControls::updateFrameCount );
-    disconnect( worker, &Player::newCurrentFrameNumber, m_playerControls, &PlayerControls::updateCurrentFrameNumber );
-    disconnect( worker, &Player::newSize, this, &MainWindow::updateSize );
-    disconnect( worker, &Player::singleImage, m_playerControls, &PlayerControls::disable );
-
-    disconnect( thread, &QThread::started,     worker, &Player::process );
-    disconnect( worker, &Player::resultReady,  this, &MainWindow::updateImages );
-    disconnect( worker, &Player::finished,     thread, &QThread::quit );
-    disconnect( worker, &Player::finished,     worker, &Player::deleteLater );
-    disconnect( thread, &QThread::finished,    this, &MainWindow::clean );
-}
