@@ -33,6 +33,7 @@ private:
     QPushButton* m_pauseBtn;
     QPushButton* m_previousBtn;
     QPushButton* m_nextBtn;
+    QPushButton* m_loopBtn;
     QCheckBox* m_loop;
     QSlider* m_time;
     QLabel* m_timeL;

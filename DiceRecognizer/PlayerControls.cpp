@@ -15,20 +15,22 @@ PlayerControls::PlayerControls(QWidget *parent)
       m_pauseBtn( new QPushButton(QIcon(":/icons/pause.svg"), tr(""), this) ),
       m_previousBtn( new QPushButton(QIcon(":/icons/previous.svg"), tr(""), this) ),
       m_nextBtn( new QPushButton(QIcon(":/icons/next.svg"), tr(""), this) ),
-      m_loop( new QCheckBox(tr("loop"), this) ),
+      m_loopBtn( new QPushButton(QIcon(":/icons/replay.svg") ,tr(""), this ) ),
       m_time( new QSlider(Qt::Horizontal, this) ),
       m_timeL( new QLabel("--/--") )
 {
-    m_time->setDisabled(true);
+    m_time->setDisabled( true );
+    m_loopBtn->setCheckable( true );
 
     connect( m_stopBtn, &QPushButton::clicked, this, &PlayerControls::stop );
     connect( m_playBtn, &QPushButton::clicked, this, &PlayerControls::play );
     connect( m_pauseBtn, &QPushButton::clicked, this, &PlayerControls::pause );
     connect( m_previousBtn, &QPushButton::clicked, this, &PlayerControls::previous );
     connect( m_nextBtn, &QPushButton::clicked, this, &PlayerControls::next );
-    connect( m_loop, &QCheckBox::clicked, this, &PlayerControls::loop );
+    connect( m_loopBtn, &QPushButton::toggled, this, &PlayerControls::loop );
 
     QHBoxLayout *all = new QHBoxLayout;
+    all->addWidget( m_loopBtn );
     all->addWidget( m_previousBtn );
     all->addWidget( m_stopBtn );
     all->addWidget( m_pauseBtn );
@@ -36,7 +38,6 @@ PlayerControls::PlayerControls(QWidget *parent)
     all->addWidget( m_nextBtn );
     all->addWidget( m_timeL );
     all->addWidget( m_time );
-    all->addWidget( m_loop );
 
     setLayout( all );
 }
@@ -60,5 +61,5 @@ void PlayerControls::disable(const bool d)
     m_playBtn->setDisabled( d );
     m_pauseBtn->setDisabled( d );
     m_nextBtn->setDisabled( d );
-    m_loop->setDisabled( d );
+    m_loopBtn->setDisabled( d );
 }
