@@ -24,7 +24,7 @@ signals:
     void newFrameCount(const int frameCount);
     void newCurrentFrameNumber(const int frameNumber);
     void resultReady(const QHash<QString, cv::Mat>);
-    void newSize(const int width, const int height);
+    void newSize(const int& width, const int& height);
     void singleImage(const bool s);
     void filePathChanged();
     void finished();

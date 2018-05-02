@@ -144,7 +144,7 @@ void Player::openFile()
     if ( !m_capture.isOpened() )
         return;
 
-    m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
+    m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
     emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
     emit newSize( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_WIDTH)), static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)) );
     emit singleImage( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) == 1 );

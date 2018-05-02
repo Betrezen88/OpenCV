@@ -99,9 +99,9 @@ void MainWindow::updateImages(const QHash<QString, cv::Mat> images)
     m_output->showImage( images.value("output") );
 }
 
-void MainWindow::updateSize(const int width, const int height)
+void MainWindow::updateSize(const int& width, const int& height)
 {
-    resize( width, height + m_playerControls->height() );
+    resize( width + 25, height + m_playerControls->height() + 70 );
 }
 
 void MainWindow::createActions()
