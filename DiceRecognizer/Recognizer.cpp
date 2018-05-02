@@ -18,18 +18,20 @@ void Recognizer::recognize(const cv::Mat image)
 
 void Recognizer::drawFoundDices(cv::Mat &image)
 {
+    int dices = 0;
     int dots = 0;
 
     for(Dice& dice : m_dices)
     {
         if (dice.dots().isEmpty())
             continue;
+        ++dices;
         dots += dice.dots().size();
         dice.draw(image);
     }
 
     cv::putText(image,
-                "Dice count: " + QString::number(m_dices.size()).toStdString(),
+                "Dice count: " + QString::number(dices).toStdString(),
                 cv::Point(5, 25),
                 cv::FONT_HERSHEY_SIMPLEX,
                 1.0,

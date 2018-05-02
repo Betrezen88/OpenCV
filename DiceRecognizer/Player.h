@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QScopedPointer>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
@@ -46,7 +47,7 @@ private:
     enum class State { IDLE, STOP, PAUSE, PLAY, NEXT, PREVIOUS, END };
 
     const Properties* m_properties;
-    ImageProcessor* m_imgProc;
+    QScopedPointer<ImageProcessor> m_imgProc { nullptr };
     bool m_loop;
     State m_state;
 

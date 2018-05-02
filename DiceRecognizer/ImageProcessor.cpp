@@ -1,8 +1,6 @@
 #include "ImageProcessor.h"
 #include "Recognizer.h"
 
-#include <QDebug>
-
 ImageProcessor::ImageProcessor(const Properties* properties)
     : m_properties(properties)
 {
@@ -27,9 +25,6 @@ const QHash<QString, cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
     cv::threshold( gray, threshold, m_properties->threshold(), 255, m_properties->thresholdType() );
 
     threshold.copyTo(filter);
-
-    if ( filter.empty() )
-        qDebug() << "filter is empty !";
 
     if ( m_properties->dilatationFirst() )
     {
