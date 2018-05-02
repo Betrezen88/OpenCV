@@ -70,7 +70,7 @@ void MainWindow::openFile()
             m_player->moveToThread( m_thread.data() );
             m_thread->start();
         }
-        m_player->setFilePath( filePath );
+        m_player->openFile( filePath );
     }
 }
 

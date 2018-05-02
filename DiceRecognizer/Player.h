@@ -17,8 +17,8 @@ public:
     explicit Player(const Properties* properties, QObject *parent = 0);
     ~Player();
 
-    void setFilePath(const QString& filePath);
     const QString filePath() const;
+    void openFile(const QString filePath);
 
 signals:
     void newFrameCount(const int frameCount);
@@ -26,7 +26,6 @@ signals:
     void resultReady(const QHash<QString, cv::Mat>);
     void newSize(const int& width, const int& height);
     void singleImage(const bool s);
-    void filePathChanged();
     void finished();
 
 public slots:
@@ -38,12 +37,9 @@ public slots:
     void previous();
     void loop(const bool l);
 
-private slots:
-    void openFile();
-
 private:
     void processImage(const cv::Mat& img);
-    bool readNonEmptyFrame();
+    bool processNonEmptyFrame();
     void resetDisplay();
 
 private:
