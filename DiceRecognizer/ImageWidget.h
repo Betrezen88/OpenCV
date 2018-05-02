@@ -12,9 +12,6 @@ class ImageWidget : public QWidget
 public:
     explicit ImageWidget(QWidget *parent = 0);
 
-signals:
-    void newSize(const int& width, const int& height);
-
 public slots:
     void showImage(const cv::Mat& image);
 

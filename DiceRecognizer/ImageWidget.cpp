@@ -24,7 +24,6 @@ void ImageWidget::showImage(const cv::Mat &image)
         m_image = QImage(m_cvImage.data, m_cvImage.cols, m_cvImage.rows, m_cvImage.cols*3, QImage::Format_RGB888);
         this->setFixedSize(image.cols, image.rows);
         update();
-        emit newSize( width(), height() );
     }
 }
 
