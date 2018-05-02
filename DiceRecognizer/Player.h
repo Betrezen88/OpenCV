@@ -25,6 +25,8 @@ signals:
     void newCurrentFrameNumber(const int frameNumber);
     void resultReady(const QHash<QString, cv::Mat>);
     void newSize(const int width, const int height);
+    void singleImage(const bool s);
+    void filePathChanged();
     void finished();
 
 public slots:
@@ -36,24 +38,28 @@ public slots:
     void previous();
     void loop(const bool l);
 
+private slots:
+    void openFile();
+
 private:
     void processImage(const cv::Mat& img);
     bool readNonEmptyFrame();
     void resetDisplay();
 
 private:
+    enum class State { IDLE, STOP, PAUSE, PLAY, NEXT, PREVIOUS, END };
+
     const Properties* m_properties;
     ImageProcessor* m_imgProc;
-    bool m_stop;
-    bool m_pause;
     bool m_loop;
+    State m_state;
 
     QString m_filePath;
 
     cv::VideoCapture m_capture;
     cv::Mat m_frame;
 
-    int m_delay;
+    int m_delay { 0 };
 };
 
 #endif // PLAYER_H

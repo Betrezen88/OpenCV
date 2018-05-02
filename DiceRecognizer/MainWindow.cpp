@@ -59,24 +59,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile()
 {
-    m_filePath.clear();
-    m_filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", "");
-    if ( !m_filePath.isEmpty() )
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"), "", "");
+    if ( !filePath.isEmpty() )
     {
         if ( m_thread.isNull() )
         {
-            m_playerControls->disable( false );
             m_player.reset( new Player(m_properties) );
             m_thread.reset( new QThread );
-
-            m_player->setFilePath( m_filePath );
             setConnections( m_thread.data(), m_player.data() );
             m_player->moveToThread( m_thread.data() );
             m_thread->start();
-
         }
-        else
-            m_player->setFilePath( m_filePath );
+        m_player->setFilePath( filePath );
     }
 }
 
@@ -87,10 +81,11 @@ void MainWindow::openProperties()
 
 void MainWindow::clean()
 {
-    m_player.reset();
     if ( !m_thread.isNull() )
     {
+        m_player.reset();
         QThread* tmp = m_thread.take();
+        tmp->quit();
         tmp->deleteLater();
     }
 }
@@ -143,10 +138,32 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( worker, &Player::newFrameCount, m_playerControls, &PlayerControls::updateFrameCount, Qt::DirectConnection );
     connect( worker, &Player::newCurrentFrameNumber, m_playerControls, &PlayerControls::updateCurrentFrameNumber, Qt::DirectConnection );
     connect( worker, &Player::newSize, this, &MainWindow::updateSize );
+    connect( worker, &Player::singleImage, m_playerControls, &PlayerControls::disable, Qt::DirectConnection );
 
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );
     connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
     connect( thread, &QThread::finished,    this, &MainWindow::clean, Qt::DirectConnection );
+}
+
+void MainWindow::disconnectPointers(QThread *thread, Player *worker)
+{
+    disconnect( m_playerControls, &PlayerControls::stop,       worker, &Player::stop );
+    disconnect( m_playerControls, &PlayerControls::play,       worker, &Player::play );
+    disconnect( m_playerControls, &PlayerControls::pause,      worker, &Player::pause );
+    disconnect( m_playerControls, &PlayerControls::next,       worker, &Player::next );
+    disconnect( m_playerControls, &PlayerControls::previous,   worker, &Player::previous );
+    disconnect( m_playerControls, &PlayerControls::loop,       worker, &Player::loop );
+
+    disconnect( worker, &Player::newFrameCount, m_playerControls, &PlayerControls::updateFrameCount );
+    disconnect( worker, &Player::newCurrentFrameNumber, m_playerControls, &PlayerControls::updateCurrentFrameNumber );
+    disconnect( worker, &Player::newSize, this, &MainWindow::updateSize );
+    disconnect( worker, &Player::singleImage, m_playerControls, &PlayerControls::disable );
+
+    disconnect( thread, &QThread::started,     worker, &Player::process );
+    disconnect( worker, &Player::resultReady,  this, &MainWindow::updateImages );
+    disconnect( worker, &Player::finished,     thread, &QThread::quit );
+    disconnect( worker, &Player::finished,     worker, &Player::deleteLater );
+    disconnect( thread, &QThread::finished,    this, &MainWindow::clean );
 }

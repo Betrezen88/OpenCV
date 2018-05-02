@@ -8,22 +8,24 @@ Player::Player(const Properties *properties, QObject *parent)
     : QObject(parent),
       m_properties( properties ),
       m_imgProc( new ImageProcessor(m_properties) ),
-      m_stop(false),
-      m_pause(true),
-      m_loop( false )
+      m_loop( false ),
+      m_state( State::IDLE )
 {
-
+    connect( this, &Player::filePathChanged, this, &Player::openFile, Qt::DirectConnection );
 }
 
 Player::~Player()
 {
-    qDebug() << "Player destroyed !";
+    emit finished();
 }
 
 void Player::setFilePath(const QString &filePath)
 {
     if ( filePath != m_filePath )
+    {
         m_filePath = filePath;
+        emit filePathChanged();
+    }
 }
 
 const QString Player::filePath() const
@@ -33,74 +35,80 @@ const QString Player::filePath() const
 
 void Player::process()
 {
-    qDebug() << "Player::process()";
-    m_capture.open( m_filePath.toStdString() );
-    if ( m_capture.isOpened() )
-    {
-        m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FPS)) );
-        emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
-        emit newSize( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_WIDTH)), static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)) );
-
-        resetDisplay();
-
-        while ( true )
+     while ( m_state != State::END )
+     {
+        switch( m_state )
         {
-            if ( !m_stop && !m_pause )
+        case State::PLAY:
+        {
+            if ( m_capture.isOpened() )
             {
                 if ( readNonEmptyFrame() )
-                {
                     processImage( m_frame );
-                    QThread::currentThread()->msleep( m_delay );
-                }
+                else if ( m_loop )
+                    openFile();
                 else
-                {
-                    if ( !m_loop )
-                        stop();
-                    else
-                        m_capture.open( m_filePath.toStdString() );
-                }
+                    stop();
             }
-            else if ( m_pause )
-                processImage( m_frame );
+            else
+                m_state = State::END;
+            break;
         }
-    }
+        case State::PAUSE:
+        {
+            processImage( m_frame );
+            break;
+        }
+        case State::NEXT:
+        {
+            if ( readNonEmptyFrame() )
+                processImage( m_frame );
+            m_state = State::PAUSE;
+            break;
+        }
+        case State::PREVIOUS:
+        {
+            m_capture.set( CV_CAP_PROP_POS_FRAMES, m_capture.get(CV_CAP_PROP_POS_FRAMES)-2.0 );
+            if ( readNonEmptyFrame() )
+                processImage( m_frame );
+            break;
+        }
+        case State::STOP:
+        {
+            resetDisplay();
+            break;
+        }
+        default:
+            break;
+        }
+        QThread::currentThread()->msleep( m_delay );
+     }
+     emit finished();
 }
 
 void Player::stop()
 {
-    qDebug() << "Player::stop()";
-    m_stop = true;
-    resetDisplay();
+    m_state = State::STOP;
 }
 
 void Player::play()
 {
-    qDebug() << "Player::play()";
-    m_stop = false;
-    m_pause = false;
+    m_state = State::PLAY;
 }
 
 void Player::pause()
 {
-    qDebug() << "Player::pause()";
-    m_pause = true;
+    m_state = State::PAUSE;
 }
 
 void Player::next()
 {
-    if ( !m_pause ) m_pause = true;
-
-    if ( readNonEmptyFrame() )
-        processImage( m_frame );
+    m_state = State::NEXT;
 }
 
 void Player::previous()
 {
-    if ( !m_pause ) m_pause = true;
-
-    m_capture.set( CV_CAP_PROP_POS_FRAMES, m_capture.get(CV_CAP_PROP_POS_FRAMES)-2.0 );
-    if ( readNonEmptyFrame() )
-        processImage( m_frame );
+    m_state = State::PREVIOUS;
 }
 
 void Player::loop(const bool l)
@@ -117,7 +125,10 @@ void Player::processImage(const cv::Mat &img)
 
 bool Player::readNonEmptyFrame()
 {
-    return ( m_capture.read(m_frame) && !m_frame.empty() );
+    if ( m_capture.read(m_frame) )
+        if ( !m_frame.empty() )
+            return true;
+    return false;
 }
 
 void Player::resetDisplay()
@@ -125,4 +136,17 @@ void Player::resetDisplay()
     m_capture.set( CV_CAP_PROP_POS_FRAMES, 0 );
     if ( readNonEmptyFrame() )
         processImage( m_frame );
+}
+
+void Player::openFile()
+{
+    m_capture.open( m_filePath.toStdString() );
+    if ( !m_capture.isOpened() )
+        return;
+
+    m_delay = ( 1000 / static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
+    emit newFrameCount( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) );
+    emit newSize( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_WIDTH)), static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_HEIGHT)) );
+    emit singleImage( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) == 1 );
+    resetDisplay();
 }

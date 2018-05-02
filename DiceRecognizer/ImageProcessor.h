@@ -20,7 +20,7 @@ signals:
     void resultReady(const QHash<QString, cv::Mat> images);
 
 public slots:
-    const QHash<QString, cv::Mat> processImage(const cv::Mat &img);
+    const QHash<QString, cv::Mat> processImage(const cv::Mat& img);
 
 private:
     void enhance(cv::Mat img, double alpha);

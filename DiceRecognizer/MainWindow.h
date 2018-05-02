@@ -36,6 +36,7 @@ private:
     void createActions();
     void createMenu();
     void setConnections(QThread* thread, Player* worker);
+    void disconnectPointers(QThread* thread, Player* worker);
 
 private:
     QTabWidget* m_tabs;
@@ -55,8 +56,6 @@ private:
     QAction* m_openFileAct;
     QAction* m_openPropertiesAct;
     QAction* m_quitAct;
-
-    QString m_filePath;
 
     QScopedPointer<Player> m_player { nullptr };
     QScopedPointer<QThread> m_thread { nullptr };

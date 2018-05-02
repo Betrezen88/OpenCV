@@ -28,6 +28,9 @@ const QHash<QString, cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
 
     threshold.copyTo(filter);
 
+    if ( filter.empty() )
+        qDebug() << "filter is empty !";
+
     if ( m_properties->dilatationFirst() )
     {
         if ( m_properties->dilatation() )
