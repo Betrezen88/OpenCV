@@ -12,7 +12,7 @@ ImageProcessor::~ImageProcessor()
 
 }
 
-const QHash<QString, cv::Mat> ImageProcessor::processImage(const cv::Mat& img)
+const QHash<QString, cv::Mat> ImageProcessor::processImage(const cv::Mat img)
 {
     cv::Mat input = img;
     cv::Mat gray;

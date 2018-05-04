@@ -8,8 +8,6 @@
 #include <QThread>
 #include <QVBoxLayout>
 
-#include <QDebug>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       m_tabs( new QTabWidget(this) ),
@@ -83,11 +81,11 @@ void MainWindow::clean()
 {
     if ( !m_thread.isNull() )
     {
-        m_player.reset();
-        QThread* tmp = m_thread.take();
-        tmp->quit();
-        tmp->deleteLater();
+        m_player->end();
+        m_player.take()->deleteLater();
+        m_thread.take()->deleteLater();
     }
+    close();
 }
 
 void MainWindow::updateImages(const QHash<QString, cv::Mat> images)
@@ -143,6 +141,4 @@ void MainWindow::setConnections(QThread *thread, Player *worker)
     connect( thread, &QThread::started,     worker, &Player::process, Qt::DirectConnection );
     connect( worker, &Player::resultReady,  this, &MainWindow::updateImages, Qt::DirectConnection );
     connect( worker, &Player::finished,     thread, &QThread::quit, Qt::DirectConnection );
-    connect( worker, &Player::finished,     worker, &Player::deleteLater, Qt::DirectConnection );
-    connect( thread, &QThread::finished,    this, &MainWindow::clean, Qt::DirectConnection );
 }

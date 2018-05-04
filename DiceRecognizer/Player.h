@@ -21,6 +21,8 @@ public:
     const QString filePath() const;
     void openFile(const QString filePath);
 
+    void end();
+
 signals:
     void newFrameCount(const int frameCount);
     void newCurrentFrameNumber(const int frameNumber);

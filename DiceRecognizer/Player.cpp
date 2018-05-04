@@ -2,8 +2,6 @@
 
 #include <QThread>
 
-#include <QDebug>
-
 Player::Player(const Properties *properties, QObject *parent)
     : QObject(parent),
       m_properties( properties ),
@@ -16,7 +14,7 @@ Player::Player(const Properties *properties, QObject *parent)
 
 Player::~Player()
 {
-    emit finished();
+
 }
 
 const QString Player::filePath() const
@@ -67,6 +65,7 @@ void Player::process()
         case State::STOP:
         {
             resetDisplay();
+            m_state = State::PAUSE;
             break;
         }
         default:
@@ -74,7 +73,6 @@ void Player::process()
         }
         QThread::currentThread()->msleep( m_delay );
      }
-     emit finished();
 }
 
 void Player::stop()
@@ -146,4 +144,10 @@ void Player::openFile(const QString filePath)
         emit singleImage( static_cast<int>(m_capture.get(CV_CAP_PROP_FRAME_COUNT)) == 1 );
         resetDisplay();
     }
+}
+
+void Player::end()
+{
+    m_state = State::END;
+    emit finished();
 }
